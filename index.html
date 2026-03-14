@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1F3864">
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="icon.png">
+<title>Marine Survey</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1F3864;--blue:#2E5FA3;--bl:#E6F1FB;--blm:#B5D4F4;
+  --grn:#1D9E75;--grnl:#E1F5EE;--amb:#BA7517;--ambl:#FAEEDA;
+  --red:#A32D2D;--redl:#FCEBEB;--grey:#F5F5F7;
+  --bdr:#D0D5DD;--txt:#111827;--txt2:#4B5563;--txt3:#9CA3AF;--wht:#fff;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--grey);color:var(--txt);font-size:15px;line-height:1.5;min-height:100vh}
+#topbar{background:var(--navy);color:#fff;padding:0 14px;display:flex;align-items:center;height:54px;gap:10px;position:sticky;top:0;z-index:100}
+#topbar h1{font-size:16px;font-weight:600;flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.tbtn{background:rgba(255,255,255,.15);border:none;color:#fff;border-radius:7px;padding:6px 12px;font-size:13px;cursor:pointer;white-space:nowrap}
+.tbtn:active{background:rgba(255,255,255,.3)}
+#prog{background:#0C447C;padding:7px 14px}
+#pb{background:rgba(255,255,255,.2);border-radius:4px;height:4px}
+#pbi{background:var(--blm);height:4px;border-radius:4px;transition:width .3s}
+#pl{color:var(--blm);font-size:11px;margin-top:3px}
+#snav{display:flex;overflow-x:auto;gap:4px;padding:9px 12px;background:#fff;border-bottom:1px solid var(--bdr);scrollbar-width:none}
+#snav::-webkit-scrollbar{display:none}
+.chip{border:1px solid var(--bdr);background:var(--wht);color:var(--txt2);border-radius:20px;padding:4px 11px;font-size:12px;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.chip.act{background:var(--navy);color:#fff;border-color:var(--navy)}
+.chip.done{background:var(--grnl);color:#085041;border-color:var(--grn)}
+#cont{padding:14px;max-width:680px;margin:0 auto;padding-bottom:100px}
+.sc{background:var(--wht);border-radius:10px;border:1px solid var(--bdr);margin-bottom:14px;overflow:hidden}
+.sh{background:var(--navy);color:#fff;padding:11px 14px;font-size:14px;font-weight:600}
+.sh2{background:var(--blue);color:#fff;padding:9px 14px;font-size:13px;font-weight:600}
+.sb{padding:13px 14px}
+.fr{display:flex;flex-direction:column;gap:4px;margin-bottom:11px}
+.fr:last-child{margin-bottom:0}
+label{font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.04em}
+input[type=text],input[type=number],textarea,select{width:100%;border:1px solid var(--bdr);border-radius:8px;padding:9px 11px;font-size:14px;color:var(--txt);background:var(--wht);outline:none;font-family:inherit;transition:border-color .15s;-webkit-appearance:none}
+input:focus,textarea:focus,select:focus{border-color:var(--blue)}
+textarea{min-height:76px;resize:vertical}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234B5563' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:34px}
+select.cg{background-color:#E1F5EE;color:#085041;border-color:var(--grn)}
+select.cs{background-color:#EAF3DE;color:#27500A;border-color:#639922}
+select.cf{background-color:var(--ambl);color:#633806;border-color:var(--amb)}
+select.cu{background-color:var(--redl);color:#791F1F;border-color:var(--red)}
+select.cp{background-color:#F7C1C1;color:#501313;border-color:#E24B4A}
+select.cn{background-color:#F1EFE8;color:#444;border-color:#B4B2A9}
+.cc{background:#F8FBFF;border:1px solid var(--blm);border-radius:8px;padding:11px;margin-bottom:11px}
+.cct{font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.04em;margin-bottom:9px}
+.nb{background:#F0F6FF;border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:10px 11px;margin-top:10px}
+.nb label{color:var(--blue);display:block;margin-bottom:5px}
+.pr{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:9px}
+.ps{border:1.5px dashed var(--bdr);border-radius:8px;overflow:hidden;aspect-ratio:4/3;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;background:#FAFAFA;position:relative}
+.ps.hp{border-style:solid;border-color:var(--blue)}
+.ps img{width:100%;height:100%;object-fit:cover}
+.psl{font-size:11px;color:var(--txt3);margin-top:5px;text-align:center}
+.psr{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.5);color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+.ct{width:100%;border-collapse:collapse;font-size:13px}
+.ct th{background:var(--navy);color:#fff;padding:7px 9px;text-align:left;font-weight:600}
+.ct td{padding:6px 7px;border-bottom:1px solid var(--bdr)}
+.ct tr:nth-child(even) td{background:#F8FBFF}
+.ct td select{padding:4px 6px;font-size:12px;border-radius:6px}
+.ct td input{border:none;background:transparent;width:100%;font-size:12px}
+#abar{position:sticky;bottom:0;background:var(--wht);border-top:1px solid var(--bdr);padding:11px 14px;display:flex;gap:9px;max-width:680px;margin:0 auto}
+.btn{flex:1;padding:12px;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid var(--bdr);background:var(--wht);color:var(--txt)}
+.btn:active{transform:scale(.98)}
+.btnp{background:var(--navy);color:#fff;border-color:var(--navy)}
+.btng{background:var(--grn);color:#fff;border-color:var(--grn)}
+#home{padding:18px 14px}
+.vc{background:var(--wht);border-radius:10px;border:1px solid var(--bdr);padding:15px;margin-bottom:11px;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.vc h3{font-size:15px;font-weight:600}
+.vc p{font-size:12px;color:var(--txt2);margin-top:2px}
+.bdg{font-size:11px;padding:3px 8px;border-radius:20px}
+.bd{background:var(--ambl);color:#633806}
+.bg{background:var(--grnl);color:#085041}
+.nsb{width:100%;padding:14px;border:1.5px dashed var(--blm);border-radius:10px;background:var(--bl);color:var(--blue);font-size:14px;font-weight:600;cursor:pointer;margin-top:4px}
+#ndlg{background:var(--wht);border:1px solid var(--bdr);border-radius:10px;padding:18px;margin-bottom:18px}
+#ndlg h2{font-size:15px;font-weight:600;color:var(--navy);margin-bottom:12px}
+#expo{padding:18px 14px}
+.ec{background:var(--wht);border-radius:10px;border:1px solid var(--bdr);padding:15px;margin-bottom:12px}
+.ec h3{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:7px}
+.ec p{font-size:13px;color:var(--txt2);margin-bottom:11px}
+.er{display:flex;gap:8px;flex-wrap:wrap}
+.eb{padding:10px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--bdr);background:var(--wht);color:var(--txt)}
+.ebp{background:var(--navy);color:#fff;border-color:var(--navy)}
+.ebg{background:var(--grn);color:#fff;border-color:var(--grn)}
+#toast{position:fixed;bottom:76px;left:50%;transform:translateX(-50%);background:#1F3864;color:#fff;padding:9px 18px;border-radius:20px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:999;white-space:nowrap}
+#toast.show{opacity:1}
+.ambox{background:var(--ambl);border-left:3px solid var(--amb);border-radius:0 8px 8px 0;padding:10px 11px;margin:11px 0}
+.ambox label{color:var(--amb);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:5px}
+.h{display:none!important}
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <button class="tbtn" id="bbk" onclick="goBack()" style="display:none">&#8592;</button>
+  <h1 id="ttl">Marine Survey</h1>
+  <button class="tbtn h" id="bexp" onclick="showExport()">Export</button>
+  <button class="tbtn h" id="bsav" onclick="saveData()">Save</button>
+</div>
+<div id="prog" class="h">
+  <div id="pb"><div id="pbi" style="width:0%"></div></div>
+  <div id="pl">Section 1</div>
+</div>
+<div id="snav" class="h"></div>
+
+<div id="home">
+  <div style="margin-bottom:18px">
+    <h2 style="font-size:19px;font-weight:600;color:var(--navy);margin-bottom:3px">Marine Survey</h2>
+    <p style="font-size:13px;color:var(--txt2)">Pre-purchase condition reports</p>
+  </div>
+  <div id="svlist"></div>
+  <div id="ndlg" class="h">
+    <h2>New Survey</h2>
+    <div class="fr"><label>Vessel Name *</label><input id="nn" type="text" placeholder="M/Y ..."></div>
+    <div class="fr"><label>Model</label><input id="nm" type="text" placeholder="Azimut Grande 27M"></div>
+    <div class="fr"><label>Hull No.</label><input id="nh" type="text" placeholder="#39"></div>
+    <div class="fr"><label>Surveyor</label><input id="ns" type="text" placeholder="Name Surname"></div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn btnp" onclick="createSurvey()">Create</button>
+      <button class="btn" onclick="closeNew()">Cancel</button>
+    </div>
+  </div>
+  <button class="nsb" id="onb" onclick="openNew()">+ New Survey</button>
+</div>
+
+<div id="editor" class="h">
+  <div id="cont"></div>
+</div>
+
+<div id="expo" class="h">
+  <div class="ec"><h3>Survey Summary</h3><div id="exsum" style="font-size:13px;color:var(--txt2)"></div></div>
+  <div class="ec">
+    <h3>Export</h3>
+    <p>Generate the report from all completed fields and photos.</p>
+    <div class="er">
+      <button class="eb ebp" onclick="exportJSON()">Save JSON backup</button>
+      <button class="eb ebg" onclick="exportHTML()">Preview HTML report</button>
+    </div>
+  </div>
+  <div class="ec">
+    <h3>Share</h3>
+    <p>Send via email, WhatsApp, Drive or any app on your device.</p>
+    <div class="er">
+      <button class="eb" onclick="shareRep()">Share &#8599;</button>
+      <button class="eb" onclick="openSurvey(current.id)">&#8592; Back</button>
+    </div>
+  </div>
+</div>
+
+<div id="abar" class="h">
+  <button class="btn" onclick="prevSec()">&#8592; Prev</button>
+  <button class="btn btnp" onclick="nextSec()">Next &#8594;</button>
+</div>
+<div id="toast"></div>
+
+<script>
+let surveys=JSON.parse(localStorage.getItem('ms_sv')||'[]');
+let current=null,curSec=0;
+const SECS=[
+  {id:'s1',title:'1  General',short:'General'},
+  {id:'s2',title:'2  Characteristics',short:'Characteristics'},
+  {id:'s3',title:'3  Class',short:'Class'},
+  {id:'s4',title:'4  Site',short:'Site'},
+  {id:'s7',title:'7  Hull',short:'Hull'},
+  {id:'s8',title:'8  Deck',short:'Deck'},
+  {id:'s9',title:'9  Interior',short:'Interior'},
+  {id:'s10',title:'10  Accommodation',short:'Cabins'},
+  {id:'s11',title:'11  Propulsion',short:'Propulsion'},
+  {id:'s12',title:'12  Generators',short:'Generators'},
+  {id:'s13',title:'13  Sea Trial',short:'Sea Trial'},
+  {id:'s14',title:'14  Machinery',short:'Machinery'},
+  {id:'s15',title:'15  Comments',short:'Comments'},
+];
+const CONDS=['','GOOD','SATISFACTORY','FAIR','UNSATISFACTORY','POOR','NOT INSPECTED','N/A'];
+const STATUS=['','OK','NOT OK','N/A','NOT TESTED'];
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+function save(){localStorage.setItem('ms_sv',JSON.stringify(surveys))}
+function toast(m,t=2200){const e=document.getElementById('toast');e.textContent=m;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),t)}
+function saveData(){snapFields();save();toast('Saved \u2713')}
+function snapFields(){if(!current)return;document.querySelectorAll('[data-f]').forEach(e=>{current.data[e.dataset.f]=e.value});const idx=surveys.findIndex(s=>s.id===current.id);if(idx>=0)surveys[idx]=current;else surveys.push(current);save()}
+function pct(s){const k=Object.keys(s.data||{}).filter(k=>s.data[k]&&s.data[k].length>0).length;return Math.min(100,Math.round(k/60*100))}
+function e(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function af(el){if(current)current.data[el.dataset.f]=el.value}
+
+// ── Home ──────────────────────────────────────────────────────────────────
+function showHome(){
+  show('home');hide('editor');hide('expo');hide('snav');hide('prog');hide('abar');
+  hide('bexp');hide('bsav');document.getElementById('bbk').style.display='none';
+  document.getElementById('ttl').textContent='Marine Survey';
+  const l=document.getElementById('svlist');l.innerHTML='';
+  if(!surveys.length){l.innerHTML='<p style="color:var(--txt2);font-size:13px;margin-bottom:14px">No surveys yet.</p>';return}
+  surveys.forEach(s=>{
+    const p=pct(s);
+    l.innerHTML+=`<div class="vc" onclick="openSurvey('${s.id}')">
+      <div><h3>${e(s.vn)||'Unnamed'}</h3><p>${e(s.model)||''} &bull; ${s.date}</p></div>
+      <span class="bdg ${p>=100?'bg':'bd'}">${p>=100?'Done':p+'%'}</span></div>`;
+  });
+}
+function openNew(){document.getElementById('ndlg').classList.remove('h');document.getElementById('onb').classList.add('h')}
+function closeNew(){document.getElementById('ndlg').classList.add('h');document.getElementById('onb').classList.remove('h')}
+function createSurvey(){
+  const vn=document.getElementById('nn').value.trim();
+  if(!vn){toast('Enter vessel name');return}
+  const s={id:uid(),vn,model:document.getElementById('nm').value.trim(),
+    hull:document.getElementById('nh').value.trim(),surveyor:document.getElementById('ns').value.trim(),
+    date:new Date().toLocaleDateString('en-GB'),data:{},photos:{}};
+  surveys.push(s);save();closeNew();
+  ['nn','nm','nh','ns'].forEach(id=>document.getElementById(id).value='');
+  openSurvey(s.id);
+}
+function openSurvey(id){
+  current=surveys.find(s=>s.id===id);if(!current)return;
+  curSec=0;show('editor');hide('home');hide('expo');show('snav');show('prog');show('abar');
+  show('bexp');show('bsav');document.getElementById('bbk').style.display='flex';
+  document.getElementById('ttl').textContent=current.vn||'Survey';
+  buildChips();renderSec();
+}
+function goBack(){
+  if(!document.getElementById('expo').classList.contains('h')){openSurvey(current.id);return}
+  snapFields();current=null;showHome();
+}
+function show(id){document.getElementById(id).classList.remove('h')}
+function hide(id){document.getElementById(id).classList.add('h')}
+
+// ── Nav ───────────────────────────────────────────────────────────────────
+function buildChips(){
+  const n=document.getElementById('snav');n.innerHTML='';
+  SECS.forEach((s,i)=>{n.innerHTML+=`<span class="chip ${i===curSec?'act':''}" id="ch${i}" onclick="jumpSec(${i})">${s.short}</span>`});
+}
+function jumpSec(i){snapFields();curSec=i;buildChips();renderSec()}
+function nextSec(){if(curSec<SECS.length-1){snapFields();curSec++;buildChips();renderSec()}else showExport()}
+function prevSec(){if(curSec>0){snapFields();curSec--;buildChips();renderSec()}}
+function updProg(){
+  const p=Math.round((curSec+1)/SECS.length*100);
+  document.getElementById('pbi').style.width=p+'%';
+  document.getElementById('pl').textContent=`Section ${curSec+1}/${SECS.length} — ${SECS[curSec].title}`;
+}
+
+// ── Field builders ────────────────────────────────────────────────────────
+function fld(id,lbl,type='text',ph=''){
+  const v=e(current.data[id]||'');
+  return`<div class="fr"><label>${lbl}</label><input type="${type}" data-f="${id}" value="${v}" placeholder="${ph}" oninput="af(this)"></div>`}
+function afld(id,lbl,ph=''){
+  const v=e(current.data[id]||'');
+  return`<div class="fr"><label>${lbl}</label><textarea data-f="${id}" placeholder="${ph}" oninput="af(this)">${v}</textarea></div>`}
+function sfld(id,lbl,opts){
+  const v=current.data[id]||'';
+  const o=opts.map(x=>`<option value="${x}" ${x===v?'selected':''}>${x||'— select —'}</option>`).join('');
+  return`<div class="fr"><label>${lbl}</label><select data-f="${id}" onchange="af(this)">${o}</select></div>`}
+function cfld(id){
+  const v=current.data[id]||'';
+  const cls={'GOOD':'cg','SATISFACTORY':'cs','FAIR':'cf','UNSATISFACTORY':'cu','POOR':'cp','NOT INSPECTED':'cn'}[v]||'';
+  const o=CONDS.map(x=>`<option value="${x}" ${x===v?'selected':''}>${x||'— condition —'}</option>`).join('');
+  return`<div class="fr"><label>Condition</label><select class="${cls}" data-f="${id}" onchange="af(this);this.className=({'GOOD':'cg','SATISFACTORY':'cs','FAIR':'cf','UNSATISFACTORY':'cu','POOR':'cp','NOT INSPECTED':'cn'}[this.value]||'')">${o}</select></div>`}
+
+// ── Component card ────────────────────────────────────────────────────────
+function ccard(px,title,extras=[]){
+  const base=[['brand','Brand / Manufacturer',''],['model','Model',''],['serial','Serial No.',''],['year','Year / Installed',''],['hours','Running Hours','']];
+  const rows=[...base,...extras].map(([id,lbl,ph])=>fld(px+'_'+id,lbl,'text',ph)).join('');
+  return`<div class="cc"><div class="cct">${title}</div>${rows}${cfld(px+'_cond')}</div>`}
+
+// ── Notes + photos ────────────────────────────────────────────────────────
+function nbox(px,lbl="Surveyor's Notes"){
+  return`<div class="nb"><label>${lbl}</label>
+    <textarea data-f="${px}_n" placeholder="Observations, deficiencies, recommendations..." oninput="af(this)">${e(current.data[px+'_n']||'')}</textarea>
+    <div class="pr">${pslot(px+'_p1','Photo 1')}${pslot(px+'_p2','Photo 2')}</div></div>`}
+function pslot(id,lbl){
+  const u=current.photos[id]||'';
+  if(u)return`<div class="ps hp" id="ps${id}"><img src="${u}" alt="${lbl}"><button class="psr" onclick="rmPh('${id}',event)">&#215;</button></div>`;
+  return`<div class="ps" id="ps${id}" onclick="capPh('${id}')">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#CCC" stroke-width="1.5"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13" r="3"/><path d="M8 7V6a2 2 0 012-2h4a2 2 0 012 2v1"/></svg>
+    <span class="psl">${lbl}</span></div>`}
+function capPh(id){
+  const i=document.createElement('input');i.type='file';i.accept='image/*';i.capture='environment';
+  i.onchange=ev=>{const f=ev.target.files[0];if(!f)return;const r=new FileReader();
+    r.onload=e=>{current.photos[id]=e.target.result;save();
+      const s=document.getElementById('ps'+id);if(s)s.outerHTML=pslot(id,id.endsWith('p1')?'Photo 1':'Photo 2')};
+    r.readAsDataURL(f)};i.click()}
+function rmPh(id,ev){ev.stopPropagation();delete current.photos[id];save();
+  const s=document.getElementById('ps'+id);if(s)s.outerHTML=pslot(id,id.endsWith('p1')?'Photo 1':'Photo 2')}
+
+// ── Checklist ─────────────────────────────────────────────────────────────
+function crow(id,lbl){
+  const v=current.data[id]||'',vn=e(current.data[id+'_n']||'');
+  const o=STATUS.map(x=>`<option ${x===v?'selected':''}>${x}</option>`).join('');
+  return`<tr><td>${lbl}</td><td style="width:100px"><select data-f="${id}" onchange="af(this)">${o}</select></td>
+    <td><input type="text" data-f="${id}_n" value="${vn}" placeholder="note" oninput="af(this)"></td></tr>`}
+function clist(px,title,rows){
+  return`<div class="sc"><div class="sh2">${title}</div><div class="sb">
+    <table class="ct"><thead><tr><th>Component</th><th>Result</th><th>Note</th></tr></thead>
+    <tbody>${rows.map(([id,lbl])=>crow(px+'_'+id.replace(/[\s\/\-]+/g,'_').toLowerCase(),lbl)).join('')}</tbody></table>
+    ${nbox(px+'_cl')}</div></div>`}
+
+// ── Section render ────────────────────────────────────────────────────────
+function renderSec(){
+  updProg();
+  document.getElementById('cont').innerHTML=buildSec(SECS[curSec].id);
+  window.scrollTo(0,0);
+}
+
+function buildSec(sid){
+  if(sid==='s1')return`<div class="sc"><div class="sh">1  General</div><div class="sb">
+    ${fld('g_vn','Vessel Name','text','M/Y ...')}${fld('g_bld','Builder / Shipyard')}
+    ${fld('g_mod','Model')}${fld('g_hul','Hull No.')}${fld('g_yr','Model Year')}
+    ${fld('g_flg','Flag / Registry')}${fld('g_off','Official Number')}
+    ${fld('g_cs','Call Sign')}${fld('g_imo','IMO')}${fld('g_msi','MMSI')}
+    ${fld('g_own','Registered Owner')}${nbox('s1')}</div></div>`;
+
+  if(sid==='s2')return`<div class="sc"><div class="sh">2  Characteristics</div><div class="sb">
+    ${fld('mc_tp','Type','text','Motor Yacht')}${fld('mc_cn','Construction')}
+    ${fld('mc_en','Engines')}${fld('mc_dp','Displacement (t)')}
+    ${fld('mc_hc','Hull Colour')}${fld('mc_sc','Superstructure Colour')}
+    </div></div><div class="sc"><div class="sh2">Dimensions</div><div class="sb">
+    ${fld('mc_la','LOA (m)')}${fld('mc_bm','Beam (m)')}${fld('mc_dr','Draft (m)')}
+    ${fld('mc_ft','Fuel Tank (l)')}${fld('mc_wt','Water Tank (l)')}
+    </div></div><div class="sc"><div class="sh2">Capacities</div><div class="sb">
+    ${fld('mc_gst','Guest Berths')}${fld('mc_crw','Crew Berths')}${nbox('s2')}</div></div>`;
+
+  if(sid==='s3')return`<div class="sc"><div class="sh">3  Class & Registration</div><div class="sb">
+    ${fld('cl_soc','Classification Society')}${fld('cl_reg','Register No.')}
+    ${fld('cl_not','Class Notation')}${fld('cl_svc','Service Notation')}
+    ${fld('cl_nav','Navigation Notation')}${fld('cl_exp','Class Survey Expiry')}
+    ${fld('cl_ce','CE Category')}${nbox('s3')}</div></div>`;
+
+  if(sid==='s4')return`<div class="sc"><div class="sh">4  Survey Site</div><div class="sb">
+    ${fld('ss_loc','Survey Location')}${fld('ss_dt','Survey Dates')}
+    ${sfld('ss_md','Inspection Mode',['','Afloat / Berthed','Sea Trial','Dry Dock','Afloat + Sea Trial'])}
+    ${fld('ss_td','Sea Trial Date')}${fld('ss_wx','Weather Conditions')}
+    ${fld('ss_ha','Hull Haul-out (date or N/A)')}${nbox('s4')}</div></div>`;
+
+  if(sid==='s7')return`
+    <div class="sc"><div class="sh">7  Hull & Bottom</div><div class="sb">
+    ${sfld('h_tp','Construction Type',['','GRP','GRP + Carbon','Aluminium','Steel','Other'])}
+    ${nbox('h_gen','General Structure Notes')}</div></div>
+    ${ccard('h_hl','Hull Topsides',[['paint','Paint Type',''],['lpaint','Last Paint Date','']])}${nbox('h_hl')}
+    ${ccard('h_gl','Glazing',[['glass','Glass Type',''],['seal','Sealant','']])}${nbox('h_gl')}
+    ${ccard('h_bt','Hull Bottom',[['afp','Anti-fouling Paint',''],['lhaul','Last Haul-out',''],['osm','Osmosis Survey','']])}${nbox('h_bt')}
+    ${ccard('h_pr','Propellers',[['bld','Blades',''],['mat','Material',''],['dp','Diam × Pitch','']])}${nbox('h_pr')}
+    ${ccard('h_sh','Shafts & Sterngear',[['mat','Shaft Material',''],['seal','Seal Type','MICROTEM'],['str','Struts / Brackets','']])}${nbox('h_sh')}
+    ${ccard('h_rd','Rudders',[['tp','Rudder Type',''],['act','Actuator','']])}${nbox('h_rd')}
+    ${ccard('h_an','Anodes',[['mat','Anode Material','Zinc / Aluminium'],['ren','Last Renewal','']])}${nbox('h_an')}
+    ${ccard('h_sf','Skin Fittings',[['mat','Valve Material','Bronze / SS'],['cnt','No. of Thru-hulls','']])}${nbox('h_sf')}`;
+
+  if(sid==='s8')return`
+    <div class="sc"><div class="sh">8  Top Deck & Superstructure</div><div class="sb">
+    ${cfld('s8_c')}${nbox('s8_sur','Deck Surface Notes')}</div></div>
+    ${ccard('dk_tk','Teak Deck & Caprails',[['caulk','Caulking Condition','']])}${nbox('dk_tk')}
+    ${ccard('dk_wl','Anchor Windlass',[['un','No. of Units','']])}${nbox('dk_wl')}
+    ${ccard('dk_an','Anchors & Chain',[['wt','Anchor Weight (kg)',''],['ch','Chain Length / Grade','']])}${nbox('dk_an')}
+    ${ccard('dk_cp','Mooring Capstans',[])}${nbox('dk_cp')}
+    ${ccard('dk_rl','Rails & Gates',[['gw','Gangway Brand','']])}${nbox('dk_rl')}
+    ${ccard('dk_cv','Canvas & Awnings',[['mfr','Manufacturer',''],['yr','Year','']])}${nbox('dk_cv')}`;
+
+  if(sid==='s9')return`
+    ${clist('bil','9.1  Bilges',[['er','Engine Room'],['st','Steering Compartment'],['gs','Guest Cabin Area'],['cr','Crew Area'],['sb','Stabiliser Compartments'],['gr','Garage / Beach']])}
+    ${ccard('str','9.2  Stringers & Frames',[])}${nbox('str')}
+    ${ccard('blk','9.3  Bulkheads',[])}${nbox('blk')}`;
+
+  if(sid==='s10'){
+    const cab=(px,lbl)=>clist(px,lbl,[['pf','Panelling & Furniture'],['cu','Curtains & Blinds'],['lk','Locks & Hinges'],['lt','Lights & Switches'],['av','TV & Hi-Fi'],['mb','Marbles / Surfaces'],['bt','Bathroom Accessories'],['ac','Air Conditioning'],['sf','Safety Equipment']])+nbox(px);
+    return cab('cv','10.1  Stbd VIP Cabin')+cab('cp','10.2  Port VIP Cabin')+
+           cab('cfs','10.3  Guest Cabin Fwd Stbd')+cab('cfp','10.4  Guest Cabin Fwd Port')+
+           cab('cow','10.5  Owner Suite')+
+           clist('sal','10.6  Main Saloon',[['pf','Panelling & Furniture'],['cu','Curtains & Blinds'],['lt','Lights & Switches'],['av','TV & Hi-Fi'],['ac','Air Conditioning'],['sf','Safety Equipment'],['eh','Emergency Escape Hatches']])+nbox('sal')+
+           clist('gal','10.7  Galley',[['pf','Panelling & Furniture'],['fl','Flooring'],['lt','Lights & Switches'],['ap','Appliances'],['ac','Air Conditioning'],['sf','Safety Equipment']])+nbox('gal')+
+           clist('whs','10.8  Wheelhouse',[['wn','Windows'],['pf','Panelling & Furniture'],['lt','Lights & Switches'],['ac','Air Conditioning'],['he','Helm Electronics']])+nbox('whs')+
+           clist('fly','10.9  Upper Deck / Flybridge',[['pf','Panelling & Furniture'],['lt','Lights & Switches'],['jc','Jacuzzi'],['fr','Fridges / BBQ']])+nbox('fly');}
+
+  if(sid==='s11')return`
+    <div class="sc"><div class="sh">11  Propulsion System</div><div class="sb">
+    ${sfld('e_tp','Engine Type',['','4-stroke Diesel','2-stroke Diesel','Petrol','Electric','Hybrid'])}</div></div>
+    ${ccard('eng','11.1  Main Engines',[['tp','Engine Type',''],['snp','Serial No. Port',''],['sns','Serial No. Stbd',''],['hp','Hours Port',''],['hs','Hours Stbd',''],['ls','Last Service',''],['nx','Next Service Due','']])}${nbox('eng')}
+    ${ccard('gbx','11.2  Gearboxes',[['rt','Ratio',''],['snp','S/N Port',''],['sns','S/N Stbd','']])}${nbox('gbx')}
+    ${ccard('ect','11.3  Engine Controls',[['tp','Control Type','']])}${nbox('ect')}
+    ${ccard('emt','11.4  Engine Mounts',[['tp','Mount Type',''],['rn','Last Renewal','']])}${nbox('emt')}
+    ${ccard('exh','11.5  Exhaust System',[['tp','Exhaust Type','Wet / Dry']])}${nbox('exh')}
+    ${ccard('evn','11.6  ER Ventilation',[['fn','Fan Brand / Type','']])}${nbox('evn')}`;
+
+  if(sid==='s12')return`
+    ${ccard('g1','12.1  Generator 1 (Port)',[['pw','Power Rating (kW)',''],['ph','Phases',''],['sn','Serial No.',''],['hr','Running Hours',''],['ls','Last Service','']])}${nbox('g1')}
+    ${ccard('g2','12.2  Generator 2 (Stbd)',[['pw','Power Rating (kW)',''],['ph','Phases',''],['sn','Serial No.',''],['hr','Running Hours',''],['ls','Last Service','']])}${nbox('g2')}`;
+
+  if(sid==='s13')return`
+    <div class="sc"><div class="sh">13  Sea Trial</div><div class="sb">
+    ${fld('st_dt','Date')}${fld('st_wx','Weather')}${fld('st_ss','Sea State')}
+    ${fld('st_tp','Air Temp (°C)')}${fld('st_fu','Fuel on Board (l)')}${fld('st_px','Persons on Board')}
+    </div></div>
+    <div class="sc"><div class="sh2">Performance Data</div><div class="sb">
+    <table class="ct"><thead><tr><th>RPM</th><th>SOG (kn)</th><th>Fuel (l/h)</th><th>Range (nm)</th></tr></thead>
+    <tbody>${[600,800,1000,1200,1400,1600,1800,2000,'MAX'].map(r=>`<tr>
+      <td>${r}</td>
+      <td><input type="number" data-f="st_${r}_sog" value="${e(current.data['st_'+r+'_sog']||'')}" oninput="af(this)"></td>
+      <td><input type="number" data-f="st_${r}_fuel" value="${e(current.data['st_'+r+'_fuel']||'')}" oninput="af(this)"></td>
+      <td><input type="number" data-f="st_${r}_rng" value="${e(current.data['st_'+r+'_rng']||'')}" oninput="af(this)"></td>
+    </tr>`).join('')}</tbody></table>${nbox('st_pf','Performance Notes')}</div></div>
+    ${clist('st_sy','Systems Test',[['ac_ch','AC – Chillers'],['ac_sw','AC – Sea Water Pump'],['ac_fc','AC – Fan Coils'],['el_sh','Electrical – Shore Power'],['el_sw','Electrical – Switchboard'],['el_uw','Electrical – Underwater Lights'],['el_nl','Navigation Lights'],['bt_sv','Service Batteries'],['bt_en','Engine Batteries'],['bt_dg','Generator Batteries'],['bg_mn','Main Bilge'],['bg_al','Bilge Level Alarm'],['fd_fd','Fire Detection'],['fd_ff','Firefighting – Main'],['fd_sp','Sprinkler (Garage)'],['fu_sy','Fuel System'],['fw_sy','Fresh Water System'],['bw_sy','Black & Grey Water'],['hy_sy','Hydraulic System'],['sc_sy','Sea Water Cooling'],['jc_sy','Jacuzzi'],['gw_sy','Stern Gangway'],['wl_p','Windlass – Port'],['wl_s','Windlass – Stbd'],['bt_bw','Bow Thruster'],['bt_st','Stern Thruster'],['stb','Stabilisers'],['str_al','Steering – All Stations'],['ap','Autopilot'],['en_st','Engine Start/Stop'],['gn_st','Generator Start/Stop'],['nv_el','Navigation Electronics'],['wm_sy','Watermaker'],['cc_tv','CCTV'],['av_au','Audio System'],['av_vi','Video System'],['gs_dt','Gas Detection (Garage)'],['wt_dr','Water-tightness Doors/Hatches']])}
+    <div class="sc"><div class="sh2">Cruising Impression</div><div class="sb">
+    ${afld('st_ci','General Impressions','Maneuverability, steering, noise, vibration, comfort...')}${nbox('st_ci_ph')}</div></div>`;
+
+  if(sid==='s14')return`
+    ${ccard('ac','14.1  Air Conditioning',[['un','No. of Units',''],['rg','Refrigerant','R410A'],['cp','Capacity (kBTU)','']])}${nbox('ac')}
+    ${ccard('wm','14.2  Watermaker',[['cp','Capacity (l/h)',''],['hr','Running Hours','']])}${nbox('wm')}
+    ${ccard('stb','14.3  Stabilisers',[['tp','Type','Fin / Gyro / Zero Speed'],['cu','Control Unit','']])}${nbox('stb')}
+    ${ccard('hyd','14.4  Hydraulic System',[])}${nbox('hyd')}
+    ${ccard('elc','14.5  Electrical System',[['sv','Shore Power Voltage',''],['tr','Transformers',''],['gi','Galvanic Isolators','']])}${nbox('elc')}
+    ${clist('nav','14.6  Navigation Electronics',[['cp','Chartplotter'],['rd','Radar'],['ai','AIS'],['vh','VHF DSC'],['ap','Autopilot'],['ec','Echo Sounder'],['gp','GPS'],['ws','Weather Station'],['ep','EPIRB'],['sa','SART']])}
+    ${ccard('av','14.7  Entertainment',[['br','AV Brand',''],['in','Internet / Satellite','']])}${nbox('av')}
+    ${ccard('fir','14.8  Fire Safety',[['db','Detection Brand',''],['fa','Fixed FF Agent','CO2 / FM200']])}${nbox('fir')}
+    ${clist('lsa','14.9  Life Saving Appliances',[['lr','Liferafts'],['lj','Lifejackets'],['ep','EPIRB'],['py','Pyrotechnics'],['mk','Medical Kit'],['gb','Grab Bags'],['li','Liferings']])}`;
+
+  if(sid==='s15')return`
+    <div class="sc"><div class="sh">15  Comments & Conclusion</div><div class="sb">
+    ${afld('cc_ae','General Aesthetic Condition','')}${nbox('cc_ae_ph')}
+    ${afld('cc_te','Technical Equipment Assessment','')}${nbox('cc_te_ph')}
+    ${afld('cc_ex','External Areas','')}
+    ${afld('cc_in','Interior Spaces','')}
+    <div class="ambox"><label>&#9888; Immediate Action Items</label>
+    <textarea data-f="cc_im" placeholder="Safety items requiring immediate action before vessel enters service..." oninput="af(this)">${e(current.data['cc_im']||'')}</textarea></div>
+    ${nbox('cc_im_ph','Immediate Action Photos')}
+    ${afld('cc_st','Recommended Works – Short-term (< 6 months)','')}
+    ${afld('cc_md','Recommended Works – Medium-term (< 12 months)','')}
+    ${afld('cc_wa','Warranty / Manufacturer Claims Pending','')}
+    ${afld('cc_op','Surveyor\'s Overall Opinion','')}
+    ${nbox('cc_fn','Final Photos')}
+    <div style="background:#F8FBFF;border-radius:8px;border:1px solid var(--blm);padding:12px;margin-top:12px">
+      <div class="cct" style="margin-bottom:8px">Signature</div>
+      ${fld('cc_sn','Surveyor Name')}${fld('cc_sq','Qualifications')}${fld('cc_dt','Report Date')}
+    </div></div></div>`;
+
+  return`<div class="sc"><div class="sh">${sid}</div><div class="sb"><p style="color:var(--txt2)">Section not yet implemented.</p></div></div>`;
+}
+
+// ── Export ────────────────────────────────────────────────────────────────
+function showExport(){
+  if(!current)return;snapFields();
+  show('expo');hide('editor');hide('abar');hide('snav');hide('prog');
+  const p=pct(current);
+  document.getElementById('exsum').innerHTML=`
+    <p><strong>Vessel:</strong> ${e(current.vn)||'—'} &bull; <strong>Model:</strong> ${e(current.model)||'—'}</p>
+    <p><strong>Surveyor:</strong> ${e(current.surveyor)||'—'} &bull; <strong>Date:</strong> ${current.date}</p>
+    <p style="margin-top:8px"><strong>Completion:</strong> ${p}%</p>
+    <div style="background:var(--bdr);border-radius:4px;height:5px;margin-top:5px">
+      <div style="background:var(--grn);width:${p}%;height:5px;border-radius:4px"></div></div>`;
+}
+function exportJSON(){
+  if(!current)return;
+  const b=new Blob([JSON.stringify(current,null,2)],{type:'application/json'});
+  const u=URL.createObjectURL(b);const a=document.createElement('a');
+  a.href=u;a.download=`Survey_${(current.vn||'vessel').replace(/\s+/g,'_')}_${current.date.replace(/\//g,'-')}.json`;
+  a.click();URL.revokeObjectURL(u);toast('JSON saved \u2713');
+}
+function exportHTML(){
+  if(!current)return;const d=current.data;const ph=current.photos;
+  const cr=v=>{const c={'GOOD':'#1D9E75','SATISFACTORY':'#639922','FAIR':'#BA7517','UNSATISFACTORY':'#A32D2D','POOR':'#E24B4A','NOT INSPECTED':'#888'};return`<b style="color:${c[v]||'#555'}">${v||'—'}</b>`};
+  const rw=(l,v)=>v?`<tr><td style="padding:5px 8px;color:#555;font-size:13px;width:35%;border-bottom:1px solid #eee">${l}</td><td style="padding:5px 8px;font-size:13px;border-bottom:1px solid #eee">${v}</td></tr>`:'';
+  const phs=ids=>ids.map(id=>ph[id]?`<img src="${ph[id]}" style="width:49%;border-radius:6px;margin:4px .5%" alt="photo">`:'').join('');
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Survey – ${e(current.vn)}</title>
+  <style>body{font-family:Arial,sans-serif;max-width:900px;margin:0 auto;padding:20px;color:#111}h1{color:#1F3864}h2{color:#2E5FA3;border-bottom:2px solid #2E5FA3;padding-bottom:4px;margin-top:24px}table{width:100%;border-collapse:collapse}.sec{background:#F8FBFF;border-radius:8px;padding:12px 16px;margin-bottom:20px}.nb{background:#EBF3FB;border-left:3px solid #2E5FA3;padding:8px 12px;border-radius:0 6px 6px 0;margin-top:8px;font-size:13px}@media print{body{padding:0}}<\/style><\/head>
+  <body>
+  <h1>Marine Survey Report — Pre-Purchase Condition</h1>
+  <p><b>Vessel:</b> ${e(current.vn)} &bull; <b>Model:</b> ${e(current.model)} &bull; <b>Hull:</b> ${e(current.hull)}</p>
+  <p><b>Surveyor:</b> ${e(current.surveyor||d.cc_sn)} &bull; <b>Date:</b> ${d.cc_dt||current.date}</p>
+  <hr>
+  <h2>1 — General</h2><div class="sec"><table>${rw('Builder',d.g_bld)}${rw('Flag',d.g_flg)}${rw('Official No.',d.g_off)}${rw('IMO',d.g_imo)}${rw('MMSI',d.g_msi)}${rw('Owner',d.g_own)}</table>${d.s1_n?`<div class="nb">${d.s1_n}</div>`:''}</div>
+  <h2>2 — Characteristics</h2><div class="sec"><table>${rw('Construction',d.mc_cn)}${rw('Engines',d.mc_en)}${rw('LOA',d.mc_la?d.mc_la+' m':'')}${rw('Beam',d.mc_bm?d.mc_bm+' m':'')}${rw('Draft',d.mc_dr?d.mc_dr+' m':'')}${rw('Fuel Tank',d.mc_ft?d.mc_ft+' l':'')}${rw('Water Tank',d.mc_wt?d.mc_wt+' l':'')}</table></div>
+  <h2>7 — Hull & Bottom</h2><div class="sec"><table>${rw('Construction',d.h_tp)}${rw('Hull Condition',cr(d.h_hl_cond))}${rw('Anti-fouling',d.h_bt_afp)}${rw('Last Haulage',d.h_bt_lhaul)}${rw('Propellers',d.h_pr_model)}${rw('Shaft Seals',d.h_sh_seal)}</table>${d.h_gen_n?`<div class="nb">${d.h_gen_n}</div>`:''}<br>${phs(['h_hl_p1','h_hl_p2','h_bt_p1','h_pr_p1'])}</div>
+  <h2>11 — Propulsion</h2><div class="sec"><table>${rw('Engine Brand',d.eng_brand)}${rw('Model',d.eng_model)}${rw('Serial Port',d.eng_snp)}${rw('Serial Stbd',d.eng_sns)}${rw('Hours Port',d.eng_hp)}${rw('Hours Stbd',d.eng_hs)}${rw('Last Service',d.eng_ls)}${rw('Condition',cr(d.eng_cond))}</table>${d.eng_n?`<div class="nb">${d.eng_n}</div>`:''}<br>${phs(['eng_p1','eng_p2'])}</div>
+  <h2>12 — Generators</h2><div class="sec"><table>${rw('Gen 1 Brand',d.g1_brand)}${rw('Gen 1 Model',d.g1_model)}${rw('Gen 1 Hours',d.g1_hr)}${rw('Gen 1 Condition',cr(d.g1_cond))}${rw('Gen 2 Brand',d.g2_brand)}${rw('Gen 2 Model',d.g2_model)}${rw('Gen 2 Hours',d.g2_hr)}${rw('Gen 2 Condition',cr(d.g2_cond))}</table></div>
+  <h2>15 — Conclusions</h2><div class="sec">
+  ${d.cc_im?`<p style="background:#FFF3CD;padding:10px;border-radius:6px"><b>&#9888; IMMEDIATE ACTION ITEMS</b><br>${d.cc_im}</p>`:''}
+  ${d.cc_st?`<p><b>Short-term works:</b> ${d.cc_st}</p>`:''}
+  ${d.cc_md?`<p><b>Medium-term works:</b> ${d.cc_md}</p>`:''}
+  ${d.cc_wa?`<p><b>Warranty claims:</b> ${d.cc_wa}</p>`:''}
+  ${d.cc_op?`<p><b>Overall opinion:</b> ${d.cc_op}</p>`:''}
+  ${phs(['cc_fn_p1','cc_fn_p2'])}</div>
+  <p style="margin-top:30px;border-top:1px solid #ccc;padding-top:12px;font-size:12px;color:#555">PREPARED WITHOUT PREJUDICE — ${e(d.cc_sn||current.surveyor)} — ${d.cc_sq||''} — ${d.cc_dt||current.date}</p>
+  
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
+</script>
+<\/body><\/html>`;
+  const b=new Blob([html],{type:'text/html'});const u=URL.createObjectURL(b);
+  window.open(u,'_blank');setTimeout(()=>URL.revokeObjectURL(u),5000);toast('Report opened \u2713');
+}
+function shareRep(){
+  if(navigator.share){navigator.share({title:`Survey – ${current.vn||'vessel'}`,text:'Marine Survey Report'}).catch(()=>{})}
+  else toast('Use Export buttons above');
+}
+showHome();
+</script>
+
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
+</script>
+</body>
+</html>
