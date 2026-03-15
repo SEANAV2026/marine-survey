@@ -369,7 +369,7 @@ function af(el){if(current)current.data[el.dataset.f]=el.value}
 function show(id){document.getElementById(id).classList.remove('h')}
 
 function setTitle(txt){
-  setTitle(txt);
+  document.getElementById('ttl').textContent=txt;
   document.getElementById('ttl').style.display='block';
   var logo=document.getElementById('tb-logo');if(logo)logo.style.display='none';
 }
