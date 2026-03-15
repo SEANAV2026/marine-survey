@@ -3,155 +3,170 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#1F3864">
 <link rel="manifest" href="manifest.json">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="apple-touch-icon" href="icon.png">
 <title>Marine Survey</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --navy:#1F3864;--blue:#2E5FA3;--bl:#E6F1FB;--blm:#B5D4F4;
-  --grn:#1D9E75;--grnl:#E1F5EE;--amb:#BA7517;--ambl:#FAEEDA;
-  --red:#A32D2D;--redl:#FCEBEB;--grey:#F5F5F7;
-  --bdr:#D0D5DD;--txt:#111827;--txt2:#4B5563;--txt3:#9CA3AF;--wht:#fff;
+  --nv:#1F3864;--bl:#2E5FA3;--bll:#E6F1FB;--blm:#B5D4F4;
+  --gn:#1D9E75;--gnl:#E1F5EE;--am:#BA7517;--aml:#FAEEDA;
+  --rd:#A32D2D;--gy:#F5F5F7;--br:#D0D5DD;
+  --tx:#111827;--t2:#4B5563;--t3:#9CA3AF;--wh:#fff;
 }
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--grey);color:var(--txt);font-size:15px;line-height:1.5;min-height:100vh}
-#topbar{background:var(--navy);color:#fff;padding:0 14px;display:flex;align-items:center;height:54px;gap:10px;position:sticky;top:0;z-index:100}
-#topbar h1{font-size:16px;font-weight:600;flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.tbtn{background:rgba(255,255,255,.15);border:none;color:#fff;border-radius:7px;padding:6px 12px;font-size:13px;cursor:pointer;white-space:nowrap}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--gy);color:var(--tx);font-size:15px;line-height:1.5;min-height:100vh}
+#tb{background:var(--nv);color:#fff;padding:0 12px;display:flex;align-items:center;height:52px;gap:8px;position:sticky;top:0;z-index:200}
+#tb h1{font-size:16px;font-weight:600;flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.tbtn{background:rgba(255,255,255,.15);border:none;color:#fff;border-radius:7px;padding:5px 11px;font-size:13px;cursor:pointer;white-space:nowrap}
 .tbtn:active{background:rgba(255,255,255,.3)}
-#prog{background:#0C447C;padding:7px 14px}
-#pb{background:rgba(255,255,255,.2);border-radius:4px;height:4px}
-#pbi{background:var(--blm);height:4px;border-radius:4px;transition:width .3s}
+#prog{background:#0C447C;padding:6px 12px}
+#pb{background:rgba(255,255,255,.2);border-radius:3px;height:3px}
+#pbi{background:var(--blm);height:3px;border-radius:3px;transition:width .3s}
 #pl{color:var(--blm);font-size:11px;margin-top:3px}
-#snav{display:flex;overflow-x:auto;gap:4px;padding:9px 12px;background:#fff;border-bottom:1px solid var(--bdr);scrollbar-width:none}
+#snav{display:flex;overflow-x:auto;gap:4px;padding:8px 10px;background:#fff;border-bottom:1px solid var(--br);scrollbar-width:none}
 #snav::-webkit-scrollbar{display:none}
-.chip{border:1px solid var(--bdr);background:var(--wht);color:var(--txt2);border-radius:20px;padding:4px 11px;font-size:12px;cursor:pointer;white-space:nowrap;flex-shrink:0}
-.chip.act{background:var(--navy);color:#fff;border-color:var(--navy)}
-.chip.done{background:var(--grnl);color:#085041;border-color:var(--grn)}
-#cont{padding:14px;max-width:680px;margin:0 auto;padding-bottom:100px}
-.sc{background:var(--wht);border-radius:10px;border:1px solid var(--bdr);margin-bottom:14px;overflow:hidden}
-.sh{background:var(--navy);color:#fff;padding:11px 14px;font-size:14px;font-weight:600}
-.sh2{background:var(--blue);color:#fff;padding:9px 14px;font-size:13px;font-weight:600}
-.sb{padding:13px 14px}
-.fr{display:flex;flex-direction:column;gap:4px;margin-bottom:11px}
+.chip{border:1px solid var(--br);background:var(--wh);color:var(--t2);border-radius:20px;padding:3px 10px;font-size:12px;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.chip.act{background:var(--nv);color:#fff;border-color:var(--nv)}
+.chip.done{background:var(--gnl);color:#085041;border-color:var(--gn)}
+.wrap{padding:12px;max-width:680px;margin:0 auto;padding-bottom:90px}
+.sc{background:var(--wh);border-radius:10px;border:1px solid var(--br);margin-bottom:12px;overflow:hidden}
+.sh{background:var(--nv);color:#fff;padding:10px 14px;font-size:14px;font-weight:600}
+.sh2{background:var(--bl);color:#fff;padding:8px 14px;font-size:13px;font-weight:600}
+.sb{padding:12px 14px}
+.fr{display:flex;flex-direction:column;gap:3px;margin-bottom:10px}
 .fr:last-child{margin-bottom:0}
-label{font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.04em}
-input[type=text],input[type=number],textarea,select{width:100%;border:1px solid var(--bdr);border-radius:8px;padding:9px 11px;font-size:14px;color:var(--txt);background:var(--wht);outline:none;font-family:inherit;transition:border-color .15s;-webkit-appearance:none}
-input:focus,textarea:focus,select:focus{border-color:var(--blue)}
-textarea{min-height:76px;resize:vertical}
-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234B5563' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:34px}
-select.cg{background-color:#E1F5EE;color:#085041;border-color:var(--grn)}
+label{font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.04em}
+input[type=text],input[type=number],textarea,select{width:100%;border:1px solid var(--br);border-radius:8px;padding:8px 10px;font-size:14px;color:var(--tx);background:var(--wh);outline:none;font-family:inherit;-webkit-appearance:none;transition:border-color .15s}
+input:focus,textarea:focus,select:focus{border-color:var(--bl)}
+textarea{min-height:72px;resize:vertical}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234B5563' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:32px}
+select.cg{background-color:#E1F5EE;color:#085041;border-color:var(--gn)}
 select.cs{background-color:#EAF3DE;color:#27500A;border-color:#639922}
-select.cf{background-color:var(--ambl);color:#633806;border-color:var(--amb)}
-select.cu{background-color:var(--redl);color:#791F1F;border-color:var(--red)}
+select.cf{background-color:var(--aml);color:#633806;border-color:var(--am)}
+select.cu{background-color:#FCEBEB;color:#791F1F;border-color:var(--rd)}
 select.cp{background-color:#F7C1C1;color:#501313;border-color:#E24B4A}
 select.cn{background-color:#F1EFE8;color:#444;border-color:#B4B2A9}
-.cc{background:#F8FBFF;border:1px solid var(--blm);border-radius:8px;padding:11px;margin-bottom:11px}
-.cct{font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.04em;margin-bottom:9px}
-.nb{background:#F0F6FF;border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:10px 11px;margin-top:10px}
-.nb label{color:var(--blue);display:block;margin-bottom:5px}
-.pr{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:9px}
-.ps{border:1.5px dashed var(--bdr);border-radius:8px;overflow:hidden;aspect-ratio:4/3;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;background:#FAFAFA;position:relative}
-.ps.hp{border-style:solid;border-color:var(--blue)}
+.cc{background:#F8FBFF;border:1px solid var(--blm);border-radius:8px;padding:10px;margin-bottom:10px}
+.cct{font-size:11px;font-weight:700;color:var(--bl);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px}
+.nb{background:#F0F6FF;border-left:3px solid var(--bl);border-radius:0 8px 8px 0;padding:9px 11px;margin-top:10px}
+.nb>label{color:var(--bl);display:block;margin-bottom:5px}
+.pr{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.ps{border:1.5px dashed var(--br);border-radius:8px;overflow:hidden;aspect-ratio:4/3;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;background:#FAFAFA;position:relative}
+.ps.hp{border-style:solid;border-color:var(--bl)}
 .ps img{width:100%;height:100%;object-fit:cover}
-.psl{font-size:11px;color:var(--txt3);margin-top:5px;text-align:center}
+.psl{font-size:11px;color:var(--t3);margin-top:4px;text-align:center}
 .psr{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.5);color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
 .ct{width:100%;border-collapse:collapse;font-size:13px}
-.ct th{background:var(--navy);color:#fff;padding:7px 9px;text-align:left;font-weight:600}
-.ct td{padding:6px 7px;border-bottom:1px solid var(--bdr)}
+.ct th{background:var(--nv);color:#fff;padding:6px 8px;text-align:left;font-weight:600}
+.ct td{padding:5px 7px;border-bottom:1px solid var(--br)}
 .ct tr:nth-child(even) td{background:#F8FBFF}
-.ct td select{padding:4px 6px;font-size:12px;border-radius:6px}
-.ct td input{border:none;background:transparent;width:100%;font-size:12px}
-#abar{position:sticky;bottom:0;background:var(--wht);border-top:1px solid var(--bdr);padding:11px 14px;display:flex;gap:9px;max-width:680px;margin:0 auto}
-.btn{flex:1;padding:12px;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid var(--bdr);background:var(--wht);color:var(--txt)}
+.ct td select{border:none;background:transparent;font-size:12px;width:96px}
+.ct td input{border:none;background:transparent;font-size:12px;width:100%}
+#abar{position:sticky;bottom:0;background:var(--wh);border-top:1px solid var(--br);padding:10px 12px;display:flex;gap:8px;max-width:680px;margin:0 auto}
+.btn{flex:1;padding:11px;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid var(--br);background:var(--wh);color:var(--tx)}
 .btn:active{transform:scale(.98)}
-.btnp{background:var(--navy);color:#fff;border-color:var(--navy)}
-.btng{background:var(--grn);color:#fff;border-color:var(--grn)}
-#home{padding:18px 14px}
-.vc{background:var(--wht);border-radius:10px;border:1px solid var(--bdr);padding:15px;margin-bottom:11px;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.btnp{background:var(--nv);color:#fff;border-color:var(--nv)}
+.btng{background:var(--gn);color:#fff;border-color:var(--gn)}
+.vc{background:var(--wh);border-radius:10px;border:1px solid var(--br);padding:14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
 .vc h3{font-size:15px;font-weight:600}
-.vc p{font-size:12px;color:var(--txt2);margin-top:2px}
-.bdg{font-size:11px;padding:3px 8px;border-radius:20px}
-.bd{background:var(--ambl);color:#633806}
-.bg{background:var(--grnl);color:#085041}
-.nsb{width:100%;padding:14px;border:1.5px dashed var(--blm);border-radius:10px;background:var(--bl);color:var(--blue);font-size:14px;font-weight:600;cursor:pointer;margin-top:4px}
-#ndlg{background:var(--wht);border:1px solid var(--bdr);border-radius:10px;padding:18px;margin-bottom:18px}
-#ndlg h2{font-size:15px;font-weight:600;color:var(--navy);margin-bottom:12px}
-#expo{padding:18px 14px}
-.ec{background:var(--wht);border-radius:10px;border:1px solid var(--bdr);padding:15px;margin-bottom:12px}
-.ec h3{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:7px}
-.ec p{font-size:13px;color:var(--txt2);margin-bottom:11px}
-.er{display:flex;gap:8px;flex-wrap:wrap}
-.eb{padding:10px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--bdr);background:var(--wht);color:var(--txt)}
-.ebp{background:var(--navy);color:#fff;border-color:var(--navy)}
-.ebg{background:var(--grn);color:#fff;border-color:var(--grn)}
-#toast{position:fixed;bottom:76px;left:50%;transform:translateX(-50%);background:#1F3864;color:#fff;padding:9px 18px;border-radius:20px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:999;white-space:nowrap}
+.vc p{font-size:12px;color:var(--t2);margin-top:2px}
+.bdg{font-size:11px;padding:3px 9px;border-radius:20px}
+.bd{background:var(--aml);color:#633806}
+.bg{background:var(--gnl);color:#085041}
+.nsb{width:100%;padding:13px;border:1.5px dashed var(--blm);border-radius:10px;background:var(--bll);color:var(--bl);font-size:14px;font-weight:600;cursor:pointer;margin-top:4px}
+/* Checklist config screen */
+.cfg-group{background:var(--wh);border-radius:10px;border:1px solid var(--br);margin-bottom:12px;overflow:hidden}
+.cfg-gh{background:var(--nv);color:#fff;padding:9px 14px;font-size:13px;font-weight:600;display:flex;justify-content:space-between;align-items:center}
+.cfg-gh button{background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:5px;padding:3px 8px;font-size:12px;cursor:pointer}
+.cfg-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--br)}
+.cfg-row:last-child{border-bottom:none}
+.cfg-row label{flex:1;font-size:14px;color:var(--tx);cursor:pointer;font-weight:400;text-transform:none;letter-spacing:0}
+.cfg-row .cbadge{font-size:10px;padding:2px 7px;border-radius:10px;white-space:nowrap;flex-shrink:0}
+.cb-full{background:#E6F1FB;color:#0C447C}
+.cb-light{background:#E1F5EE;color:#085041}
+.cb-space{background:#EAF3DE;color:#27500A}
+.cb-surf{background:#F1EFE8;color:#444}
+.ck{width:20px;height:20px;accent-color:var(--nv);cursor:pointer;flex-shrink:0}
+/* ambox */
+.ambox{background:var(--aml);border-left:3px solid var(--am);border-radius:0 8px 8px 0;padding:9px 11px;margin:10px 0}
+.ambox>label{color:var(--am);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:4px}
+#toast{position:fixed;bottom:72px;left:50%;transform:translateX(-50%);background:#1F3864;color:#fff;padding:8px 16px;border-radius:20px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:999;white-space:nowrap}
 #toast.show{opacity:1}
-.ambox{background:var(--ambl);border-left:3px solid var(--amb);border-radius:0 8px 8px 0;padding:10px 11px;margin:11px 0}
-.ambox label{color:var(--amb);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:5px}
 .h{display:none!important}
 </style>
 </head>
 <body>
 
-<div id="topbar">
-  <button class="tbtn" id="bbk" onclick="goBack()" style="display:none">&#8592;</button>
+<div id="tb">
+  <button class="tbtn h" id="bbk" onclick="goBack()">&#8592;</button>
   <h1 id="ttl">Marine Survey</h1>
   <button class="tbtn h" id="bexp" onclick="showExport()">Export</button>
   <button class="tbtn h" id="bsav" onclick="saveData()">Save</button>
 </div>
-<div id="prog" class="h">
-  <div id="pb"><div id="pbi" style="width:0%"></div></div>
-  <div id="pl">Section 1</div>
-</div>
+<div id="prog" class="h"><div id="pb"><div id="pbi" style="width:0%"></div></div><div id="pl"></div></div>
 <div id="snav" class="h"></div>
 
-<div id="home">
-  <div style="margin-bottom:18px">
-    <h2 style="font-size:19px;font-weight:600;color:var(--navy);margin-bottom:3px">Marine Survey</h2>
-    <p style="font-size:13px;color:var(--txt2)">Pre-purchase condition reports</p>
+<!-- HOME -->
+<div id="s-home" class="wrap">
+  <div style="margin-bottom:16px">
+    <h2 style="font-size:19px;font-weight:600;color:var(--nv);margin-bottom:2px">Marine Survey</h2>
+    <p style="font-size:13px;color:var(--t2)">Pre-purchase condition reports</p>
   </div>
   <div id="svlist"></div>
-  <div id="ndlg" class="h">
-    <h2>New Survey</h2>
-    <div class="fr"><label>Vessel Name *</label><input id="nn" type="text" placeholder="M/Y ..."></div>
-    <div class="fr"><label>Model</label><input id="nm" type="text" placeholder="Azimut Grande 27M"></div>
-    <div class="fr"><label>Hull No.</label><input id="nh" type="text" placeholder="#39"></div>
-    <div class="fr"><label>Surveyor</label><input id="ns" type="text" placeholder="Name Surname"></div>
-    <div style="display:flex;gap:8px;margin-top:12px">
-      <button class="btn btnp" onclick="createSurvey()">Create</button>
-      <button class="btn" onclick="closeNew()">Cancel</button>
-    </div>
-  </div>
-  <button class="nsb" id="onb" onclick="openNew()">+ New Survey</button>
+  <button class="nsb" onclick="startNew()">+ New Survey</button>
 </div>
 
-<div id="editor" class="h">
-  <div id="cont"></div>
+<!-- STEP 1: VESSEL INFO -->
+<div id="s-info" class="h wrap">
+  <div class="sc"><div class="sh">Vessel Information</div><div class="sb">
+    <div class="fr"><label>Vessel Name *</label><input id="fi-vn" type="text" placeholder="M/Y ..."></div>
+    <div class="fr"><label>Builder / Shipyard</label><input id="fi-bld" type="text" placeholder="Azimut-Benetti"></div>
+    <div class="fr"><label>Model</label><input id="fi-mod" type="text" placeholder="Azimut Grande 27M"></div>
+    <div class="fr"><label>Hull No.</label><input id="fi-hul" type="text" placeholder="#39"></div>
+    <div class="fr"><label>Year</label><input id="fi-yr" type="text" placeholder="2021"></div>
+    <div class="fr"><label>Surveyor</label><input id="fi-srv" type="text" placeholder="Name Surname"></div>
+  </div></div>
+  <div style="display:flex;gap:8px">
+    <button class="btn" onclick="showHome()">Cancel</button>
+    <button class="btn btnp" onclick="goToChecklist()">Select sections &#8594;</button>
+  </div>
 </div>
 
-<div id="expo" class="h">
-  <div class="ec"><h3>Survey Summary</h3><div id="exsum" style="font-size:13px;color:var(--txt2)"></div></div>
-  <div class="ec">
-    <h3>Export</h3>
-    <p>Generate the report from all completed fields and photos.</p>
-    <div class="er">
-      <button class="eb ebp" onclick="exportJSON()">Save JSON backup</button>
-      <button class="eb ebg" onclick="exportHTML()">Preview HTML report</button>
-    </div>
+<!-- STEP 2: CHECKLIST -->
+<div id="s-chk" class="h wrap" style="padding-bottom:100px">
+  <div style="margin-bottom:12px">
+    <p style="font-size:13px;color:var(--t2)">Tick everything to include in this survey report.</p>
   </div>
-  <div class="ec">
-    <h3>Share</h3>
-    <p>Send via email, WhatsApp, Drive or any app on your device.</p>
-    <div class="er">
-      <button class="eb" onclick="shareRep()">Share &#8599;</button>
-      <button class="eb" onclick="openSurvey(current.id)">&#8592; Back</button>
-    </div>
+  <div id="chk-content"></div>
+  <div style="display:flex;gap:8px;margin-top:4px">
+    <button class="btn" onclick="showStep('s-info')">&#8592; Back</button>
+    <button class="btn btnp" onclick="createSurvey()">Start Survey &#8594;</button>
   </div>
+</div>
+
+<!-- SURVEY EDITOR -->
+<div id="s-edit" class="h">
+  <div id="econt" class="wrap"></div>
+</div>
+
+<!-- EXPORT -->
+<div id="s-expo" class="h wrap">
+  <div class="sc"><div class="sh">Summary</div><div class="sb"><div id="exsum"></div></div></div>
+  <div class="sc"><div class="sh2">Export report</div><div class="sb">
+    <p style="font-size:13px;color:var(--t2);margin-bottom:10px">Generate the final report document.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btnp" onclick="exportJSON()">Save JSON backup</button>
+      <button class="btn btng" onclick="exportHTML()">Preview HTML report</button>
+    </div>
+  </div></div>
+  <div class="sc"><div class="sh2">Share</div><div class="sb">
+    <div style="display:flex;gap:8px">
+      <button class="btn" onclick="shareRep()">Share &#8599;</button>
+      <button class="btn" onclick="openSurvey(current.id)">&#8592; Back</button>
+    </div>
+  </div></div>
 </div>
 
 <div id="abar" class="h">
@@ -161,351 +176,638 @@ select.cn{background-color:#F1EFE8;color:#444;border-color:#B4B2A9}
 <div id="toast"></div>
 
 <script>
-let surveys=JSON.parse(localStorage.getItem('ms_sv')||'[]');
-let current=null,curSec=0;
-const SECS=[
-  {id:'s1',title:'1  General',short:'General'},
-  {id:'s2',title:'2  Characteristics',short:'Characteristics'},
-  {id:'s3',title:'3  Class',short:'Class'},
-  {id:'s4',title:'4  Site',short:'Site'},
-  {id:'s7',title:'7  Hull',short:'Hull'},
-  {id:'s8',title:'8  Deck',short:'Deck'},
-  {id:'s9',title:'9  Interior',short:'Interior'},
-  {id:'s10',title:'10  Accommodation',short:'Cabins'},
-  {id:'s11',title:'11  Propulsion',short:'Propulsion'},
-  {id:'s12',title:'12  Generators',short:'Generators'},
-  {id:'s13',title:'13  Sea Trial',short:'Sea Trial'},
-  {id:'s14',title:'14  Machinery',short:'Machinery'},
-  {id:'s15',title:'15  Comments',short:'Comments'},
-];
-const CONDS=['','GOOD','SATISFACTORY','FAIR','UNSATISFACTORY','POOR','NOT INSPECTED','N/A'];
-const STATUS=['','OK','NOT OK','N/A','NOT TESTED'];
-function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
-function save(){localStorage.setItem('ms_sv',JSON.stringify(surveys))}
-function toast(m,t=2200){const e=document.getElementById('toast');e.textContent=m;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),t)}
-function saveData(){snapFields();save();toast('Saved \u2713')}
-function snapFields(){if(!current)return;document.querySelectorAll('[data-f]').forEach(e=>{current.data[e.dataset.f]=e.value});const idx=surveys.findIndex(s=>s.id===current.id);if(idx>=0)surveys[idx]=current;else surveys.push(current);save()}
-function pct(s){const k=Object.keys(s.data||{}).filter(k=>s.data[k]&&s.data[k].length>0).length;return Math.min(100,Math.round(k/60*100))}
-function e(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-function af(el){if(current)current.data[el.dataset.f]=el.value}
+// ═══ DATA ═══════════════════════════════════════════════════════
+var surveys=JSON.parse(localStorage.getItem('ms_sv')||'[]');
+var current=null,curSec=0;
+var CONDS=['','GOOD','SATISFACTORY','FAIR','UNSATISFACTORY','POOR','NOT INSPECTED','N/A'];
+var STATUS=['','OK','NOT OK','N/A','NOT TESTED'];
 
-// ── Home ──────────────────────────────────────────────────────────────────
+// ── Component database ────────────────────────────────────────
+// cat: 'full' | 'light' | 'space' | 'surface'
+// group: section they belong to
+var DB=[
+  // ── Spaces / Rooms ─────────────────────────────────────────
+  {id:'owner',   name:'Owner Suite',            cat:'space',  group:'acc',  fields:[]},
+  {id:'mstvip',  name:'Master VIP Cabin',        cat:'space',  group:'acc',  fields:[]},
+  {id:'vip-p',   name:'VIP Cabin Port',          cat:'space',  group:'acc',  fields:[]},
+  {id:'vip-s',   name:'VIP Cabin Stbd',          cat:'space',  group:'acc',  fields:[]},
+  {id:'gst-fp',  name:'Guest Cabin Fwd Port',    cat:'space',  group:'acc',  fields:[]},
+  {id:'gst-fs',  name:'Guest Cabin Fwd Stbd',    cat:'space',  group:'acc',  fields:[]},
+  {id:'gst-ap',  name:'Guest Cabin Aft Port',    cat:'space',  group:'acc',  fields:[]},
+  {id:'gst-as',  name:'Guest Cabin Aft Stbd',    cat:'space',  group:'acc',  fields:[]},
+  {id:'crew1',   name:'Crew Cabin 1',            cat:'space',  group:'acc',  fields:[]},
+  {id:'crew2',   name:'Crew Cabin 2',            cat:'space',  group:'acc',  fields:[]},
+  {id:'crew3',   name:'Crew Cabin 3',            cat:'space',  group:'acc',  fields:[]},
+  {id:'md-sal',  name:'Main Deck Saloon',        cat:'space',  group:'acc',  fields:[]},
+  {id:'ud-sal',  name:'Upper Deck Saloon',       cat:'space',  group:'acc',  fields:[]},
+  {id:'ud-din',  name:'Upper Deck Dining',       cat:'space',  group:'acc',  fields:[]},
+  {id:'galley',  name:'Galley',                  cat:'space',  group:'acc',  fields:[]},
+  {id:'wheelh',  name:'Wheelhouse',              cat:'space',  group:'acc',  fields:[]},
+  {id:'flybrg',  name:'Flybridge',               cat:'space',  group:'acc',  fields:[]},
+  {id:'sundeck', name:'Sun Deck',                cat:'space',  group:'acc',  fields:[]},
+  {id:'beach',   name:'Beach Club / Platform',   cat:'space',  group:'acc',  fields:[]},
+  {id:'garage',  name:'Garage',                  cat:'space',  group:'acc',  fields:[]},
+  {id:'crewmss', name:'Crew Mess',               cat:'space',  group:'acc',  fields:[]},
+  // ── Main engines ───────────────────────────────────────────
+  {id:'mtu16v',  name:'MTU 16V2000 M96L',        cat:'full',   group:'prop', fields:['Serial No. Port','Serial No. Stbd','Hours Port','Hours Stbd','Last Service']},
+  {id:'mtu12v',  name:'MTU 12V2000 M96L',        cat:'full',   group:'prop', fields:['Serial No. Port','Serial No. Stbd','Hours Port','Hours Stbd','Last Service']},
+  {id:'mtu8v',   name:'MTU 8V2000 M96L',         cat:'full',   group:'prop', fields:['Serial No. Port','Serial No. Stbd','Hours Port','Hours Stbd','Last Service']},
+  {id:'man2842', name:'MAN D2842 LE406',          cat:'full',   group:'prop', fields:['Serial No. Port','Serial No. Stbd','Hours Port','Hours Stbd','Last Service']},
+  {id:'man2868', name:'MAN D2868 LE',             cat:'full',   group:'prop', fields:['Serial No. Port','Serial No. Stbd','Hours Port','Hours Stbd']},
+  {id:'cat-c18', name:'CAT C18 ACERT',            cat:'full',   group:'prop', fields:['Serial No. Port','Serial No. Stbd','Hours Port','Hours Stbd','Last Service']},
+  {id:'cat-c32', name:'CAT C32 ACERT',            cat:'full',   group:'prop', fields:['Serial No. Port','Serial No. Stbd','Hours Port','Hours Stbd','Last Service']},
+  {id:'volvo-ips',name:'Volvo Penta IPS',         cat:'full',   group:'prop', fields:['S/N Port','S/N Stbd','Hours Port','Hours Stbd']},
+  {id:'scania',  name:'Scania DI16',              cat:'full',   group:'prop', fields:['S/N Port','S/N Stbd','Hours Port','Hours Stbd','Last Service']},
+  // ── Gearboxes ──────────────────────────────────────────────
+  {id:'zf-3370', name:'ZF 3370',                  cat:'light',  group:'prop', fields:['Ratio','S/N Port','S/N Stbd']},
+  {id:'zf-2050', name:'ZF 2050',                  cat:'light',  group:'prop', fields:['Ratio','S/N Port','S/N Stbd']},
+  {id:'vdrive',  name:'V-Drive Unit',             cat:'light',  group:'prop', fields:['Ratio']},
+  // ── Generators ─────────────────────────────────────────────
+  {id:'koh70',   name:'Kohler 70EFOZDJ',          cat:'full',   group:'gen',  fields:['Serial No. 1','Serial No. 2','Hours 1','Hours 2','Last Service']},
+  {id:'koh50',   name:'Kohler 50EKOZD',           cat:'full',   group:'gen',  fields:['Serial No.','Hours','Last Service']},
+  {id:'koh32',   name:'Kohler 32EKOZD',           cat:'full',   group:'gen',  fields:['Serial No.','Hours','Last Service']},
+  {id:'koh20',   name:'Kohler 20EFKOZD',          cat:'full',   group:'gen',  fields:['Serial No.','Hours','Last Service']},
+  {id:'onan-dkm',name:'Onan DKMD / DKMC',        cat:'full',   group:'gen',  fields:['Serial No.','Hours','Last Service']},
+  {id:'nrthlts', name:'Northern Lights',          cat:'full',   group:'gen',  fields:['Serial No.','Hours','Last Service']},
+  // ── Stabilisers ────────────────────────────────────────────
+  {id:'qnt-zs',  name:'Quantum Zero-Speed Fins',  cat:'light',  group:'mach', fields:['Control Unit','Actuator Type','Last Service']},
+  {id:'qnt-uw',  name:'Quantum Underway Fins',    cat:'light',  group:'mach', fields:['Control Unit','Last Service']},
+  {id:'seakp',   name:'Seakeeper Gyro',           cat:'full',   group:'mach', fields:['Serial No.','Hours','Last Service']},
+  {id:'naiad',   name:'Naiad Stabiliser Fins',    cat:'light',  group:'mach', fields:['Control Unit']},
+  // ── AC & watermaker ────────────────────────────────────────
+  {id:'condaria',name:'Condaria Chiller',         cat:'full',   group:'mach', fields:['Refrigerant','Capacity (kBTU)','No. of Units']},
+  {id:'idromc',  name:'Idromar Watermaker',       cat:'full',   group:'mach', fields:['Capacity (l/h)','Hours']},
+  {id:'vico-wm', name:'Vico Watermaker',          cat:'full',   group:'mach', fields:['Capacity (l/h)','Hours']},
+  // ── Thrusters ──────────────────────────────────────────────
+  {id:'sp-bow',  name:'Side-Power Bow Thruster',  cat:'light',  group:'mach', fields:['Drive Type','Tunnel Diam.']},
+  {id:'sp-stn',  name:'Side-Power Stern Thruster',cat:'light',  group:'mach', fields:['Drive Type']},
+  {id:'slp-bow', name:'Sleipner Bow Thruster',    cat:'light',  group:'mach', fields:['Drive Type','Tunnel Diam.']},
+  {id:'qnt-bow', name:'Quantum Bow Thruster',     cat:'light',  group:'mach', fields:['Drive Type']},
+  // ── Shaft seals ────────────────────────────────────────────
+  {id:'microtem',name:'Microtem Shaft Seal',      cat:'light',  group:'mach', fields:['Shaft Diameter']},
+  {id:'tides-m', name:'Tides Marine Dripless',    cat:'light',  group:'mach', fields:['Shaft Diameter']},
+  // ── Hull surfaces ───────────────────────────────────────────
+  {id:'teak-dk', name:'Teak Deck',                cat:'surface',group:'hull', fields:['Caulking Condition','Last Renewal']},
+  {id:'gelcoat', name:'Gelcoat / Paint',          cat:'surface',group:'hull', fields:['Paint Type','Last Repaint']},
+  {id:'glazing', name:'Glazing',                  cat:'surface',group:'hull', fields:['Glass Type','Sealant Condition']},
+  {id:'af-paint',name:'Anti-fouling Paint',       cat:'surface',group:'hull', fields:['Paint Brand','Last Applied']},
+];
+
+// ── Fixed structural sections (always available to include/exclude) ────────
+var FIXED=[
+  {id:'s1', title:'1  General',          short:'General',    req:true},
+  {id:'s2', title:'2  Characteristics',  short:'Charact.',   req:true},
+  {id:'s3', title:'3  Class',            short:'Class',      req:false},
+  {id:'s4', title:'4  Survey Site',      short:'Site',       req:true},
+  {id:'s7', title:'7  Hull & Bottom',    short:'Hull',       req:false},
+  {id:'s8', title:'8  Top Deck',         short:'Deck',       req:false},
+  {id:'s9', title:'9  Hull Interior',    short:'Interior',   req:false},
+  {id:'s11',title:'11  Propulsion',      short:'Propulsion', req:false},
+  {id:'s12',title:'12  Generators',      short:'Generators', req:false},
+  {id:'s13',title:'13  Sea Trial',       short:'Sea Trial',  req:false},
+  {id:'s14',title:'14  Machinery',       short:'Machinery',  req:false},
+  {id:'s15',title:'15  Comments',        short:'Comments',   req:true},
+];
+
+// ── Suggested presets ─────────────────────────────────────────────────────
+var PRESETS={
+  azimut27:{
+    fixed:['s1','s2','s3','s4','s7','s8','s9','s11','s12','s13','s14','s15'],
+    dyn:['owner','vip-p','vip-s','gst-fp','md-sal','galley','wheelh','flybrg','beach',
+         'man2842','zf-3370','koh32','qnt-uw']
+  },
+  azimut38:{
+    fixed:['s1','s2','s3','s4','s7','s8','s9','s11','s12','s13','s14','s15'],
+    dyn:['owner','vip-p','vip-s','gst-fp','gst-fs','md-sal','ud-din','galley','wheelh',
+         'flybrg','beach','garage','mtu16v','zf-3370','koh70','qnt-zs']
+  },
+  generic:{
+    fixed:['s1','s2','s3','s4','s7','s8','s9','s11','s12','s13','s14','s15'],
+    dyn:['owner','vip-p','md-sal','galley','wheelh']
+  }
+};
+
+// ═══ UTILS ══════════════════════════════════════════════════════
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+function saveSv(){localStorage.setItem('ms_sv',JSON.stringify(surveys))}
+function toast(m,t){var e=document.getElementById('toast');e.textContent=m;e.classList.add('show');setTimeout(function(){e.classList.remove('show')},t||2200)}
+function saveData(){snap();saveSv();toast('Saved \u2713')}
+function snap(){
+  if(!current)return;
+  document.querySelectorAll('[data-f]').forEach(function(el){current.data[el.dataset.f]=el.value});
+  var i=surveys.findIndex(function(s){return s.id===current.id});
+  if(i>=0)surveys[i]=current; else surveys.push(current);
+  saveSv();
+}
+function pct(s){
+  var k=Object.keys(s.data||{}).filter(function(k){return s.data[k]&&s.data[k].length>0}).length;
+  return Math.min(100,Math.round(k/Math.max(20,k+5)*100));
+}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function af(el){if(current)current.data[el.dataset.f]=el.value}
+function show(id){document.getElementById(id).classList.remove('h')}
+function hide(id){document.getElementById(id).classList.add('h')}
+function showStep(id){
+  ['s-home','s-info','s-chk','s-edit','s-expo'].forEach(hide);
+  show(id);
+}
+
+// ── Badge ─────────────────────────────────────────────────────
+function badge(cat){
+  var m={full:['Full','cb-full'],light:['Light','cb-light'],space:['Room','cb-space'],surface:['Surface','cb-surf']};
+  var x=m[cat]||['—','cb-surf'];
+  return '<span class="cbadge '+x[1]+'">'+x[0]+'</span>';
+}
+
+// ═══ HOME ═══════════════════════════════════════════════════════
 function showHome(){
-  show('home');hide('editor');hide('expo');hide('snav');hide('prog');hide('abar');
-  hide('bexp');hide('bsav');document.getElementById('bbk').style.display='none';
+  showStep('s-home');
+  hide('prog');hide('snav');hide('abar');hide('bexp');hide('bsav');
+  document.getElementById('bbk').classList.add('h');
   document.getElementById('ttl').textContent='Marine Survey';
-  const l=document.getElementById('svlist');l.innerHTML='';
-  if(!surveys.length){l.innerHTML='<p style="color:var(--txt2);font-size:13px;margin-bottom:14px">No surveys yet.</p>';return}
-  surveys.forEach(s=>{
-    const p=pct(s);
-    l.innerHTML+=`<div class="vc" onclick="openSurvey('${s.id}')">
-      <div><h3>${e(s.vn)||'Unnamed'}</h3><p>${e(s.model)||''} &bull; ${s.date}</p></div>
-      <span class="bdg ${p>=100?'bg':'bd'}">${p>=100?'Done':p+'%'}</span></div>`;
+  var l=document.getElementById('svlist');l.innerHTML='';
+  if(!surveys.length){l.innerHTML='<p style="color:var(--t2);font-size:13px;margin-bottom:12px">No surveys yet.</p>';return}
+  surveys.forEach(function(s){
+    var p=pct(s);
+    l.innerHTML+='<div class="vc" onclick="openSurvey(\''+s.id+'\')">' +
+      '<div><h3>'+esc(s.vn||'Unnamed')+'</h3><p>'+esc(s.model||'')+(s.model?' &bull; ':'')+s.date+'</p></div>'+
+      '<span class="bdg '+(p>=100?'bg':'bd')+'">'+(p>=100?'Done':p+'%')+'</span></div>';
   });
 }
-function openNew(){document.getElementById('ndlg').classList.remove('h');document.getElementById('onb').classList.add('h')}
-function closeNew(){document.getElementById('ndlg').classList.add('h');document.getElementById('onb').classList.remove('h')}
-function createSurvey(){
-  const vn=document.getElementById('nn').value.trim();
+
+// ═══ NEW SURVEY FLOW ════════════════════════════════════════════
+function startNew(){
+  showStep('s-info');
+  show('bbk');
+  document.getElementById('ttl').textContent='New Survey';
+}
+
+function goToChecklist(){
+  var vn=document.getElementById('fi-vn').value.trim();
   if(!vn){toast('Enter vessel name');return}
-  const s={id:uid(),vn,model:document.getElementById('nm').value.trim(),
-    hull:document.getElementById('nh').value.trim(),surveyor:document.getElementById('ns').value.trim(),
-    date:new Date().toLocaleDateString('en-GB'),data:{},photos:{}};
-  surveys.push(s);save();closeNew();
-  ['nn','nm','nh','ns'].forEach(id=>document.getElementById(id).value='');
+  buildChecklist();
+  showStep('s-chk');
+  document.getElementById('ttl').textContent='Select Sections';
+}
+
+function buildChecklist(){
+  var html='';
+
+  // ── Preset quick-select ──────────────────────────────────────
+  html+='<div class="sc"><div class="sh2">Quick presets</div><div class="sb" style="display:flex;gap:8px;flex-wrap:wrap">';
+  html+='<button class="btn" style="flex:none" onclick="applyPreset(\'azimut27\')">Azimut 27M</button>';
+  html+='<button class="btn" style="flex:none" onclick="applyPreset(\'azimut38\')">Azimut Trideck 38</button>';
+  html+='<button class="btn" style="flex:none" onclick="applyPreset(\'generic\')">Generic MY</button>';
+  html+='<button class="btn" style="flex:none" onclick="selectAll()">Select all</button>';
+  html+='<button class="btn" style="flex:none" onclick="selectNone()">Clear all</button>';
+  html+='</div></div>';
+
+  // ── Fixed sections ───────────────────────────────────────────
+  html+='<div class="cfg-group"><div class="cfg-gh">Report sections</div>';
+  FIXED.forEach(function(sec){
+    html+='<div class="cfg-row">'+
+      '<input class="ck" type="checkbox" id="fs-'+sec.id+'" '+(sec.req?'checked disabled':'')+'> '+
+      '<label for="fs-'+sec.id+'">'+sec.title+'</label></div>';
+  });
+  html+='</div>';
+
+  // ── DB items grouped ─────────────────────────────────────────
+  var groups=[
+    {id:'acc',  label:'Accommodation (cabins & spaces)'},
+    {id:'prop', label:'Propulsion (engines & gearboxes)'},
+    {id:'gen',  label:'Generators'},
+    {id:'mach', label:'Machinery & systems'},
+    {id:'hull', label:'Hull surfaces'},
+  ];
+  groups.forEach(function(grp){
+    var items=DB.filter(function(d){return d.group===grp.id});
+    if(!items.length)return;
+    html+='<div class="cfg-group"><div class="cfg-gh">'+grp.label+
+      '<button onclick="toggleGroup(\''+grp.id+'\')">All / None</button></div>';
+    items.forEach(function(item){
+      html+='<div class="cfg-row">'+
+        '<input class="ck" type="checkbox" id="di-'+item.id+'" data-grp="'+grp.id+'"> '+
+        '<label for="di-'+item.id+'">'+item.name+'</label>'+badge(item.cat)+'</div>';
+    });
+    html+='</div>';
+  });
+
+  document.getElementById('chk-content').innerHTML=html;
+}
+
+function applyPreset(key){
+  var p=PRESETS[key];if(!p)return;
+  // Reset all
+  document.querySelectorAll('#chk-content .ck:not(:disabled)').forEach(function(c){c.checked=false});
+  // Set fixed
+  p.fixed.forEach(function(id){var c=document.getElementById('fs-'+id);if(c)c.checked=true});
+  // Set dyn
+  p.dyn.forEach(function(id){var c=document.getElementById('di-'+id);if(c)c.checked=true});
+  toast('Preset applied \u2713');
+}
+function selectAll(){document.querySelectorAll('#chk-content .ck:not(:disabled)').forEach(function(c){c.checked=true})}
+function selectNone(){document.querySelectorAll('#chk-content .ck:not(:disabled)').forEach(function(c){c.checked=false})}
+function toggleGroup(grp){
+  var items=document.querySelectorAll('[data-grp="'+grp+'"]');
+  var anyUnchecked=Array.from(items).some(function(c){return!c.checked});
+  items.forEach(function(c){c.checked=anyUnchecked});
+}
+
+function createSurvey(){
+  // Collect fixed sections
+  var selFixed=FIXED.filter(function(sec){
+    var c=document.getElementById('fs-'+sec.id);return c&&c.checked;
+  }).map(function(s){return s.id});
+
+  // Collect db items
+  var selDyn=[];
+  DB.forEach(function(item){
+    var c=document.getElementById('di-'+item.id);
+    if(c&&c.checked)selDyn.push({dbId:item.id,iid:uid()});
+  });
+
+  var s={
+    id:uid(),
+    vn:document.getElementById('fi-vn').value.trim(),
+    bld:document.getElementById('fi-bld').value.trim(),
+    model:document.getElementById('fi-mod').value.trim(),
+    hull:document.getElementById('fi-hul').value.trim(),
+    yr:document.getElementById('fi-yr').value.trim(),
+    surveyor:document.getElementById('fi-srv').value.trim(),
+    date:new Date().toLocaleDateString('en-GB'),
+    fixedSections:selFixed,
+    dynItems:selDyn,
+    data:{},photos:{}
+  };
+  surveys.push(s);saveSv();
+  ['fi-vn','fi-bld','fi-mod','fi-hul','fi-yr','fi-srv'].forEach(function(id){document.getElementById(id).value=''});
   openSurvey(s.id);
 }
+
+// ═══ SURVEY ═════════════════════════════════════════════════════
 function openSurvey(id){
-  current=surveys.find(s=>s.id===id);if(!current)return;
-  curSec=0;show('editor');hide('home');hide('expo');show('snav');show('prog');show('abar');
-  show('bexp');show('bsav');document.getElementById('bbk').style.display='flex';
+  current=surveys.find(function(s){return s.id===id});
+  if(!current)return;
+  curSec=0;
+  showStep('s-edit');
+  show('prog');show('snav');show('abar');show('bexp');show('bsav');show('bbk');
   document.getElementById('ttl').textContent=current.vn||'Survey';
   buildChips();renderSec();
 }
-function goBack(){
-  if(!document.getElementById('expo').classList.contains('h')){openSurvey(current.id);return}
-  snapFields();current=null;showHome();
-}
-function show(id){document.getElementById(id).classList.remove('h')}
-function hide(id){document.getElementById(id).classList.add('h')}
 
-// ── Nav ───────────────────────────────────────────────────────────────────
+function getSections(){
+  if(!current)return[];
+  var result=[];
+  // Insert fixed sections in order
+  var anchorMap={acc:'s9',prop:'s11',gen:'s12',mach:'s14',hull:'s7',deck:'s8'};
+  FIXED.forEach(function(sec){
+    if(current.fixedSections.indexOf(sec.id)<0)return;
+    result.push({id:sec.id,title:sec.title,short:sec.short,type:'fixed'});
+    // After each fixed section, insert dyn items anchored to it
+    var anchor=sec.id;
+    (current.dynItems||[]).forEach(function(di){
+      var item=DB.find(function(d){return d.id===di.dbId});
+      if(!item)return;
+      if(anchorMap[item.group]===anchor)
+        result.push({id:'d-'+di.iid,title:item.name,
+          short:item.name.split(' ').slice(0,3).join(' '),
+          type:'dyn',dbId:item.id,iid:di.iid});
+    });
+  });
+  return result;
+}
+
 function buildChips(){
-  const n=document.getElementById('snav');n.innerHTML='';
-  SECS.forEach((s,i)=>{n.innerHTML+=`<span class="chip ${i===curSec?'act':''}" id="ch${i}" onclick="jumpSec(${i})">${s.short}</span>`});
+  var nav=document.getElementById('snav');nav.innerHTML='';
+  getSections().forEach(function(sec,i){
+    nav.innerHTML+='<span class="chip '+(i===curSec?'act':'')+'" onclick="jumpSec('+i+')">'+sec.short+'</span>';
+  });
 }
-function jumpSec(i){snapFields();curSec=i;buildChips();renderSec()}
-function nextSec(){if(curSec<SECS.length-1){snapFields();curSec++;buildChips();renderSec()}else showExport()}
-function prevSec(){if(curSec>0){snapFields();curSec--;buildChips();renderSec()}}
+function jumpSec(i){snap();curSec=i;buildChips();renderSec()}
+function nextSec(){
+  var s=getSections();
+  if(curSec<s.length-1){snap();curSec++;buildChips();renderSec();}
+  else showExport();
+}
+function prevSec(){if(curSec>0){snap();curSec--;buildChips();renderSec()}}
 function updProg(){
-  const p=Math.round((curSec+1)/SECS.length*100);
+  var s=getSections();var p=Math.round((curSec+1)/s.length*100);
   document.getElementById('pbi').style.width=p+'%';
-  document.getElementById('pl').textContent=`Section ${curSec+1}/${SECS.length} — ${SECS[curSec].title}`;
+  document.getElementById('pl').textContent=(curSec+1)+'/'+s.length+' \u2013 '+(s[curSec]?s[curSec].title:'');
+}
+function goBack(){
+  if(!document.getElementById('s-expo').classList.contains('h')){openSurvey(current.id);return}
+  if(!document.getElementById('s-edit').classList.contains('h')){snap();current=null;}
+  showHome();
 }
 
-// ── Field builders ────────────────────────────────────────────────────────
-function fld(id,lbl,type='text',ph=''){
-  const v=e(current.data[id]||'');
-  return`<div class="fr"><label>${lbl}</label><input type="${type}" data-f="${id}" value="${v}" placeholder="${ph}" oninput="af(this)"></div>`}
-function afld(id,lbl,ph=''){
-  const v=e(current.data[id]||'');
-  return`<div class="fr"><label>${lbl}</label><textarea data-f="${id}" placeholder="${ph}" oninput="af(this)">${v}</textarea></div>`}
-function sfld(id,lbl,opts){
-  const v=current.data[id]||'';
-  const o=opts.map(x=>`<option value="${x}" ${x===v?'selected':''}>${x||'— select —'}</option>`).join('');
-  return`<div class="fr"><label>${lbl}</label><select data-f="${id}" onchange="af(this)">${o}</select></div>`}
-function cfld(id){
-  const v=current.data[id]||'';
-  const cls={'GOOD':'cg','SATISFACTORY':'cs','FAIR':'cf','UNSATISFACTORY':'cu','POOR':'cp','NOT INSPECTED':'cn'}[v]||'';
-  const o=CONDS.map(x=>`<option value="${x}" ${x===v?'selected':''}>${x||'— condition —'}</option>`).join('');
-  return`<div class="fr"><label>Condition</label><select class="${cls}" data-f="${id}" onchange="af(this);this.className=({'GOOD':'cg','SATISFACTORY':'cs','FAIR':'cf','UNSATISFACTORY':'cu','POOR':'cp','NOT INSPECTED':'cn'}[this.value]||'')">${o}</select></div>`}
-
-// ── Component card ────────────────────────────────────────────────────────
-function ccard(px,title,extras=[]){
-  const base=[['brand','Brand / Manufacturer',''],['model','Model',''],['serial','Serial No.',''],['year','Year / Installed',''],['hours','Running Hours','']];
-  const rows=[...base,...extras].map(([id,lbl,ph])=>fld(px+'_'+id,lbl,'text',ph)).join('');
-  return`<div class="cc"><div class="cct">${title}</div>${rows}${cfld(px+'_cond')}</div>`}
-
-// ── Notes + photos ────────────────────────────────────────────────────────
-function nbox(px,lbl="Surveyor's Notes"){
-  return`<div class="nb"><label>${lbl}</label>
-    <textarea data-f="${px}_n" placeholder="Observations, deficiencies, recommendations..." oninput="af(this)">${e(current.data[px+'_n']||'')}</textarea>
-    <div class="pr">${pslot(px+'_p1','Photo 1')}${pslot(px+'_p2','Photo 2')}</div></div>`}
-function pslot(id,lbl){
-  const u=current.photos[id]||'';
-  if(u)return`<div class="ps hp" id="ps${id}"><img src="${u}" alt="${lbl}"><button class="psr" onclick="rmPh('${id}',event)">&#215;</button></div>`;
-  return`<div class="ps" id="ps${id}" onclick="capPh('${id}')">
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#CCC" stroke-width="1.5"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13" r="3"/><path d="M8 7V6a2 2 0 012-2h4a2 2 0 012 2v1"/></svg>
-    <span class="psl">${lbl}</span></div>`}
-function capPh(id){
-  const i=document.createElement('input');i.type='file';i.accept='image/*';i.capture='environment';
-  i.onchange=ev=>{const f=ev.target.files[0];if(!f)return;const r=new FileReader();
-    r.onload=e=>{current.photos[id]=e.target.result;save();
-      const s=document.getElementById('ps'+id);if(s)s.outerHTML=pslot(id,id.endsWith('p1')?'Photo 1':'Photo 2')};
-    r.readAsDataURL(f)};i.click()}
-function rmPh(id,ev){ev.stopPropagation();delete current.photos[id];save();
-  const s=document.getElementById('ps'+id);if(s)s.outerHTML=pslot(id,id.endsWith('p1')?'Photo 1':'Photo 2')}
-
-// ── Checklist ─────────────────────────────────────────────────────────────
-function crow(id,lbl){
-  const v=current.data[id]||'',vn=e(current.data[id+'_n']||'');
-  const o=STATUS.map(x=>`<option ${x===v?'selected':''}>${x}</option>`).join('');
-  return`<tr><td>${lbl}</td><td style="width:100px"><select data-f="${id}" onchange="af(this)">${o}</select></td>
-    <td><input type="text" data-f="${id}_n" value="${vn}" placeholder="note" oninput="af(this)"></td></tr>`}
-function clist(px,title,rows){
-  return`<div class="sc"><div class="sh2">${title}</div><div class="sb">
-    <table class="ct"><thead><tr><th>Component</th><th>Result</th><th>Note</th></tr></thead>
-    <tbody>${rows.map(([id,lbl])=>crow(px+'_'+id.replace(/[\s\/\-]+/g,'_').toLowerCase(),lbl)).join('')}</tbody></table>
-    ${nbox(px+'_cl')}</div></div>`}
-
-// ── Section render ────────────────────────────────────────────────────────
+// ═══ RENDER ═════════════════════════════════════════════════════
 function renderSec(){
   updProg();
-  document.getElementById('cont').innerHTML=buildSec(SECS[curSec].id);
+  var sec=getSections()[curSec];if(!sec)return;
+  document.getElementById('econt').innerHTML=sec.type==='fixed'?fixedSec(sec.id):dynSec(sec);
   window.scrollTo(0,0);
 }
 
-function buildSec(sid){
-  if(sid==='s1')return`<div class="sc"><div class="sh">1  General</div><div class="sb">
-    ${fld('g_vn','Vessel Name','text','M/Y ...')}${fld('g_bld','Builder / Shipyard')}
-    ${fld('g_mod','Model')}${fld('g_hul','Hull No.')}${fld('g_yr','Model Year')}
-    ${fld('g_flg','Flag / Registry')}${fld('g_off','Official Number')}
-    ${fld('g_cs','Call Sign')}${fld('g_imo','IMO')}${fld('g_msi','MMSI')}
-    ${fld('g_own','Registered Owner')}${nbox('s1')}</div></div>`;
+// ── Field helpers ─────────────────────────────────────────────
+function fld(id,lbl,type,ph){var v=esc(current.data[id]||'');
+  return '<div class="fr"><label>'+lbl+'</label><input type="'+(type||'text')+'" data-f="'+id+'" value="'+v+'" placeholder="'+(ph||'')+'" oninput="af(this)"></div>'}
+function afld(id,lbl,ph){var v=esc(current.data[id]||'');
+  return '<div class="fr"><label>'+lbl+'</label><textarea data-f="'+id+'" placeholder="'+(ph||'')+'" oninput="af(this)">'+v+'</textarea></div>'}
+function sfld(id,lbl,opts){var v=current.data[id]||'';
+  var o=opts.map(function(x){return'<option '+(x===v?'selected':'')+'>'+x+'</option>'}).join('');
+  return '<div class="fr"><label>'+lbl+'</label><select data-f="'+id+'" onchange="af(this)">'+o+'</select></div>'}
+function cfld(id){
+  var v=current.data[id]||'';
+  var cls={GOOD:'cg',SATISFACTORY:'cs',FAIR:'cf',UNSATISFACTORY:'cu',POOR:'cp','NOT INSPECTED':'cn'}[v]||'';
+  var o=CONDS.map(function(x){return'<option '+(x===v?'selected':'')+'>'+(x||'\u2014 condition \u2014')+'</option>'}).join('');
+  return '<div class="fr"><label>Condition</label><select class="'+cls+'" data-f="'+id+'" onchange="af(this);var m={GOOD:\'cg\',SATISFACTORY:\'cs\',FAIR:\'cf\',UNSATISFACTORY:\'cu\',POOR:\'cp\',\'NOT INSPECTED\':\'cn\'};this.className=m[this.value]||\'\'">'+o+'</select></div>'}
 
-  if(sid==='s2')return`<div class="sc"><div class="sh">2  Characteristics</div><div class="sb">
-    ${fld('mc_tp','Type','text','Motor Yacht')}${fld('mc_cn','Construction')}
-    ${fld('mc_en','Engines')}${fld('mc_dp','Displacement (t)')}
-    ${fld('mc_hc','Hull Colour')}${fld('mc_sc','Superstructure Colour')}
-    </div></div><div class="sc"><div class="sh2">Dimensions</div><div class="sb">
-    ${fld('mc_la','LOA (m)')}${fld('mc_bm','Beam (m)')}${fld('mc_dr','Draft (m)')}
-    ${fld('mc_ft','Fuel Tank (l)')}${fld('mc_wt','Water Tank (l)')}
-    </div></div><div class="sc"><div class="sh2">Capacities</div><div class="sb">
-    ${fld('mc_gst','Guest Berths')}${fld('mc_crw','Crew Berths')}${nbox('s2')}</div></div>`;
-
-  if(sid==='s3')return`<div class="sc"><div class="sh">3  Class & Registration</div><div class="sb">
-    ${fld('cl_soc','Classification Society')}${fld('cl_reg','Register No.')}
-    ${fld('cl_not','Class Notation')}${fld('cl_svc','Service Notation')}
-    ${fld('cl_nav','Navigation Notation')}${fld('cl_exp','Class Survey Expiry')}
-    ${fld('cl_ce','CE Category')}${nbox('s3')}</div></div>`;
-
-  if(sid==='s4')return`<div class="sc"><div class="sh">4  Survey Site</div><div class="sb">
-    ${fld('ss_loc','Survey Location')}${fld('ss_dt','Survey Dates')}
-    ${sfld('ss_md','Inspection Mode',['','Afloat / Berthed','Sea Trial','Dry Dock','Afloat + Sea Trial'])}
-    ${fld('ss_td','Sea Trial Date')}${fld('ss_wx','Weather Conditions')}
-    ${fld('ss_ha','Hull Haul-out (date or N/A)')}${nbox('s4')}</div></div>`;
-
-  if(sid==='s7')return`
-    <div class="sc"><div class="sh">7  Hull & Bottom</div><div class="sb">
-    ${sfld('h_tp','Construction Type',['','GRP','GRP + Carbon','Aluminium','Steel','Other'])}
-    ${nbox('h_gen','General Structure Notes')}</div></div>
-    ${ccard('h_hl','Hull Topsides',[['paint','Paint Type',''],['lpaint','Last Paint Date','']])}${nbox('h_hl')}
-    ${ccard('h_gl','Glazing',[['glass','Glass Type',''],['seal','Sealant','']])}${nbox('h_gl')}
-    ${ccard('h_bt','Hull Bottom',[['afp','Anti-fouling Paint',''],['lhaul','Last Haul-out',''],['osm','Osmosis Survey','']])}${nbox('h_bt')}
-    ${ccard('h_pr','Propellers',[['bld','Blades',''],['mat','Material',''],['dp','Diam × Pitch','']])}${nbox('h_pr')}
-    ${ccard('h_sh','Shafts & Sterngear',[['mat','Shaft Material',''],['seal','Seal Type','MICROTEM'],['str','Struts / Brackets','']])}${nbox('h_sh')}
-    ${ccard('h_rd','Rudders',[['tp','Rudder Type',''],['act','Actuator','']])}${nbox('h_rd')}
-    ${ccard('h_an','Anodes',[['mat','Anode Material','Zinc / Aluminium'],['ren','Last Renewal','']])}${nbox('h_an')}
-    ${ccard('h_sf','Skin Fittings',[['mat','Valve Material','Bronze / SS'],['cnt','No. of Thru-hulls','']])}${nbox('h_sf')}`;
-
-  if(sid==='s8')return`
-    <div class="sc"><div class="sh">8  Top Deck & Superstructure</div><div class="sb">
-    ${cfld('s8_c')}${nbox('s8_sur','Deck Surface Notes')}</div></div>
-    ${ccard('dk_tk','Teak Deck & Caprails',[['caulk','Caulking Condition','']])}${nbox('dk_tk')}
-    ${ccard('dk_wl','Anchor Windlass',[['un','No. of Units','']])}${nbox('dk_wl')}
-    ${ccard('dk_an','Anchors & Chain',[['wt','Anchor Weight (kg)',''],['ch','Chain Length / Grade','']])}${nbox('dk_an')}
-    ${ccard('dk_cp','Mooring Capstans',[])}${nbox('dk_cp')}
-    ${ccard('dk_rl','Rails & Gates',[['gw','Gangway Brand','']])}${nbox('dk_rl')}
-    ${ccard('dk_cv','Canvas & Awnings',[['mfr','Manufacturer',''],['yr','Year','']])}${nbox('dk_cv')}`;
-
-  if(sid==='s9')return`
-    ${clist('bil','9.1  Bilges',[['er','Engine Room'],['st','Steering Compartment'],['gs','Guest Cabin Area'],['cr','Crew Area'],['sb','Stabiliser Compartments'],['gr','Garage / Beach']])}
-    ${ccard('str','9.2  Stringers & Frames',[])}${nbox('str')}
-    ${ccard('blk','9.3  Bulkheads',[])}${nbox('blk')}`;
-
-  if(sid==='s10'){
-    const cab=(px,lbl)=>clist(px,lbl,[['pf','Panelling & Furniture'],['cu','Curtains & Blinds'],['lk','Locks & Hinges'],['lt','Lights & Switches'],['av','TV & Hi-Fi'],['mb','Marbles / Surfaces'],['bt','Bathroom Accessories'],['ac','Air Conditioning'],['sf','Safety Equipment']])+nbox(px);
-    return cab('cv','10.1  Stbd VIP Cabin')+cab('cp','10.2  Port VIP Cabin')+
-           cab('cfs','10.3  Guest Cabin Fwd Stbd')+cab('cfp','10.4  Guest Cabin Fwd Port')+
-           cab('cow','10.5  Owner Suite')+
-           clist('sal','10.6  Main Saloon',[['pf','Panelling & Furniture'],['cu','Curtains & Blinds'],['lt','Lights & Switches'],['av','TV & Hi-Fi'],['ac','Air Conditioning'],['sf','Safety Equipment'],['eh','Emergency Escape Hatches']])+nbox('sal')+
-           clist('gal','10.7  Galley',[['pf','Panelling & Furniture'],['fl','Flooring'],['lt','Lights & Switches'],['ap','Appliances'],['ac','Air Conditioning'],['sf','Safety Equipment']])+nbox('gal')+
-           clist('whs','10.8  Wheelhouse',[['wn','Windows'],['pf','Panelling & Furniture'],['lt','Lights & Switches'],['ac','Air Conditioning'],['he','Helm Electronics']])+nbox('whs')+
-           clist('fly','10.9  Upper Deck / Flybridge',[['pf','Panelling & Furniture'],['lt','Lights & Switches'],['jc','Jacuzzi'],['fr','Fridges / BBQ']])+nbox('fly');}
-
-  if(sid==='s11')return`
-    <div class="sc"><div class="sh">11  Propulsion System</div><div class="sb">
-    ${sfld('e_tp','Engine Type',['','4-stroke Diesel','2-stroke Diesel','Petrol','Electric','Hybrid'])}</div></div>
-    ${ccard('eng','11.1  Main Engines',[['tp','Engine Type',''],['snp','Serial No. Port',''],['sns','Serial No. Stbd',''],['hp','Hours Port',''],['hs','Hours Stbd',''],['ls','Last Service',''],['nx','Next Service Due','']])}${nbox('eng')}
-    ${ccard('gbx','11.2  Gearboxes',[['rt','Ratio',''],['snp','S/N Port',''],['sns','S/N Stbd','']])}${nbox('gbx')}
-    ${ccard('ect','11.3  Engine Controls',[['tp','Control Type','']])}${nbox('ect')}
-    ${ccard('emt','11.4  Engine Mounts',[['tp','Mount Type',''],['rn','Last Renewal','']])}${nbox('emt')}
-    ${ccard('exh','11.5  Exhaust System',[['tp','Exhaust Type','Wet / Dry']])}${nbox('exh')}
-    ${ccard('evn','11.6  ER Ventilation',[['fn','Fan Brand / Type','']])}${nbox('evn')}`;
-
-  if(sid==='s12')return`
-    ${ccard('g1','12.1  Generator 1 (Port)',[['pw','Power Rating (kW)',''],['ph','Phases',''],['sn','Serial No.',''],['hr','Running Hours',''],['ls','Last Service','']])}${nbox('g1')}
-    ${ccard('g2','12.2  Generator 2 (Stbd)',[['pw','Power Rating (kW)',''],['ph','Phases',''],['sn','Serial No.',''],['hr','Running Hours',''],['ls','Last Service','']])}${nbox('g2')}`;
-
-  if(sid==='s13')return`
-    <div class="sc"><div class="sh">13  Sea Trial</div><div class="sb">
-    ${fld('st_dt','Date')}${fld('st_wx','Weather')}${fld('st_ss','Sea State')}
-    ${fld('st_tp','Air Temp (°C)')}${fld('st_fu','Fuel on Board (l)')}${fld('st_px','Persons on Board')}
-    </div></div>
-    <div class="sc"><div class="sh2">Performance Data</div><div class="sb">
-    <table class="ct"><thead><tr><th>RPM</th><th>SOG (kn)</th><th>Fuel (l/h)</th><th>Range (nm)</th></tr></thead>
-    <tbody>${[600,800,1000,1200,1400,1600,1800,2000,'MAX'].map(r=>`<tr>
-      <td>${r}</td>
-      <td><input type="number" data-f="st_${r}_sog" value="${e(current.data['st_'+r+'_sog']||'')}" oninput="af(this)"></td>
-      <td><input type="number" data-f="st_${r}_fuel" value="${e(current.data['st_'+r+'_fuel']||'')}" oninput="af(this)"></td>
-      <td><input type="number" data-f="st_${r}_rng" value="${e(current.data['st_'+r+'_rng']||'')}" oninput="af(this)"></td>
-    </tr>`).join('')}</tbody></table>${nbox('st_pf','Performance Notes')}</div></div>
-    ${clist('st_sy','Systems Test',[['ac_ch','AC – Chillers'],['ac_sw','AC – Sea Water Pump'],['ac_fc','AC – Fan Coils'],['el_sh','Electrical – Shore Power'],['el_sw','Electrical – Switchboard'],['el_uw','Electrical – Underwater Lights'],['el_nl','Navigation Lights'],['bt_sv','Service Batteries'],['bt_en','Engine Batteries'],['bt_dg','Generator Batteries'],['bg_mn','Main Bilge'],['bg_al','Bilge Level Alarm'],['fd_fd','Fire Detection'],['fd_ff','Firefighting – Main'],['fd_sp','Sprinkler (Garage)'],['fu_sy','Fuel System'],['fw_sy','Fresh Water System'],['bw_sy','Black & Grey Water'],['hy_sy','Hydraulic System'],['sc_sy','Sea Water Cooling'],['jc_sy','Jacuzzi'],['gw_sy','Stern Gangway'],['wl_p','Windlass – Port'],['wl_s','Windlass – Stbd'],['bt_bw','Bow Thruster'],['bt_st','Stern Thruster'],['stb','Stabilisers'],['str_al','Steering – All Stations'],['ap','Autopilot'],['en_st','Engine Start/Stop'],['gn_st','Generator Start/Stop'],['nv_el','Navigation Electronics'],['wm_sy','Watermaker'],['cc_tv','CCTV'],['av_au','Audio System'],['av_vi','Video System'],['gs_dt','Gas Detection (Garage)'],['wt_dr','Water-tightness Doors/Hatches']])}
-    <div class="sc"><div class="sh2">Cruising Impression</div><div class="sb">
-    ${afld('st_ci','General Impressions','Maneuverability, steering, noise, vibration, comfort...')}${nbox('st_ci_ph')}</div></div>`;
-
-  if(sid==='s14')return`
-    ${ccard('ac','14.1  Air Conditioning',[['un','No. of Units',''],['rg','Refrigerant','R410A'],['cp','Capacity (kBTU)','']])}${nbox('ac')}
-    ${ccard('wm','14.2  Watermaker',[['cp','Capacity (l/h)',''],['hr','Running Hours','']])}${nbox('wm')}
-    ${ccard('stb','14.3  Stabilisers',[['tp','Type','Fin / Gyro / Zero Speed'],['cu','Control Unit','']])}${nbox('stb')}
-    ${ccard('hyd','14.4  Hydraulic System',[])}${nbox('hyd')}
-    ${ccard('elc','14.5  Electrical System',[['sv','Shore Power Voltage',''],['tr','Transformers',''],['gi','Galvanic Isolators','']])}${nbox('elc')}
-    ${clist('nav','14.6  Navigation Electronics',[['cp','Chartplotter'],['rd','Radar'],['ai','AIS'],['vh','VHF DSC'],['ap','Autopilot'],['ec','Echo Sounder'],['gp','GPS'],['ws','Weather Station'],['ep','EPIRB'],['sa','SART']])}
-    ${ccard('av','14.7  Entertainment',[['br','AV Brand',''],['in','Internet / Satellite','']])}${nbox('av')}
-    ${ccard('fir','14.8  Fire Safety',[['db','Detection Brand',''],['fa','Fixed FF Agent','CO2 / FM200']])}${nbox('fir')}
-    ${clist('lsa','14.9  Life Saving Appliances',[['lr','Liferafts'],['lj','Lifejackets'],['ep','EPIRB'],['py','Pyrotechnics'],['mk','Medical Kit'],['gb','Grab Bags'],['li','Liferings']])}`;
-
-  if(sid==='s15')return`
-    <div class="sc"><div class="sh">15  Comments & Conclusion</div><div class="sb">
-    ${afld('cc_ae','General Aesthetic Condition','')}${nbox('cc_ae_ph')}
-    ${afld('cc_te','Technical Equipment Assessment','')}${nbox('cc_te_ph')}
-    ${afld('cc_ex','External Areas','')}
-    ${afld('cc_in','Interior Spaces','')}
-    <div class="ambox"><label>&#9888; Immediate Action Items</label>
-    <textarea data-f="cc_im" placeholder="Safety items requiring immediate action before vessel enters service..." oninput="af(this)">${e(current.data['cc_im']||'')}</textarea></div>
-    ${nbox('cc_im_ph','Immediate Action Photos')}
-    ${afld('cc_st','Recommended Works – Short-term (< 6 months)','')}
-    ${afld('cc_md','Recommended Works – Medium-term (< 12 months)','')}
-    ${afld('cc_wa','Warranty / Manufacturer Claims Pending','')}
-    ${afld('cc_op','Surveyor\'s Overall Opinion','')}
-    ${nbox('cc_fn','Final Photos')}
-    <div style="background:#F8FBFF;border-radius:8px;border:1px solid var(--blm);padding:12px;margin-top:12px">
-      <div class="cct" style="margin-bottom:8px">Signature</div>
-      ${fld('cc_sn','Surveyor Name')}${fld('cc_sq','Qualifications')}${fld('cc_dt','Report Date')}
-    </div></div></div>`;
-
-  return`<div class="sc"><div class="sh">${sid}</div><div class="sb"><p style="color:var(--txt2)">Section not yet implemented.</p></div></div>`;
+function ccard(px,title,extras,ctype){
+  var rows='',t=ctype||'full';
+  if(t==='full'||t==='light'){
+    rows+=fld(px+'_br','Brand / Manufacturer','text','');
+    rows+=fld(px+'_mo','Model','text','');
+    if(t==='full'){rows+=fld(px+'_sn','Serial No.','text','');rows+=fld(px+'_yr','Year / Installed','text','');rows+=fld(px+'_hr','Running Hours','text','');}
+    else{rows+=fld(px+'_yr','Year / Installed','text','');}
+  }
+  if(extras)extras.forEach(function(ex){rows+=fld(px+'_'+ex[0],ex[1],'text',ex[2]||'')});
+  return '<div class="cc"><div class="cct">'+title+'</div>'+rows+cfld(px+'_co')+'</div>';
 }
 
-// ── Export ────────────────────────────────────────────────────────────────
+function nbox(px,lbl){var v=esc(current.data[px+'_n']||'');
+  return '<div class="nb"><label>'+(lbl||"Surveyor's Notes")+'</label>'+
+    '<textarea data-f="'+px+'_n" placeholder="Observations, deficiencies, recommendations..." oninput="af(this)">'+v+'</textarea>'+
+    '<div class="pr">'+pslot(px+'_1','Photo 1')+pslot(px+'_2','Photo 2')+'</div></div>'}
+
+function pslot(id,lbl){
+  var u=current.photos[id]||'';
+  if(u)return'<div class="ps hp" id="ps'+id+'"><img src="'+u+'" alt="'+lbl+'"><button class="psr" onclick="rmPh(\''+id+'\',event)">\u00d7</button></div>';
+  return'<div class="ps" id="ps'+id+'" onclick="capPh(\''+id+'\')">'+
+    '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#CCC" stroke-width="1.5"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13" r="3"/><path d="M8 7V6a2 2 0 012-2h4a2 2 0 012 2v1"/></svg>'+
+    '<span class="psl">'+lbl+'</span></div>'}
+function capPh(id){var i=document.createElement('input');i.type='file';i.accept='image/*';i.capture='environment';
+  i.onchange=function(ev){var f=ev.target.files[0];if(!f)return;var r=new FileReader();
+    r.onload=function(e){current.photos[id]=e.target.result;saveSv();
+      var s=document.getElementById('ps'+id);if(s)s.outerHTML=pslot(id,id.endsWith('_1')?'Photo 1':'Photo 2')};
+    r.readAsDataURL(f)};i.click()}
+function rmPh(id,ev){ev.stopPropagation();delete current.photos[id];saveSv();
+  var s=document.getElementById('ps'+id);if(s)s.outerHTML=pslot(id,id.endsWith('_1')?'Photo 1':'Photo 2')}
+
+function crow(id,lbl){var v=current.data[id]||'',vn=esc(current.data[id+'_n']||'');
+  var o=STATUS.map(function(x){return'<option '+(x===v?'selected':'')+'>'+x+'</option>'}).join('');
+  return'<tr><td>'+lbl+'</td><td><select data-f="'+id+'" onchange="af(this)">'+o+'</select></td>'+
+    '<td><input type="text" data-f="'+id+'_n" value="'+vn+'" placeholder="note" oninput="af(this)"></td></tr>'}
+function clist(px,title,rows){
+  return'<div class="sc"><div class="sh2">'+title+'</div><div class="sb">'+
+    '<table class="ct"><thead><tr><th>Component</th><th>Result</th><th>Note</th></tr></thead><tbody>'+
+    rows.map(function(r){return crow(px+'_'+r[0].replace(/[\s\/\-&]+/g,'_').toLowerCase(),r[1])}).join('')+
+    '</tbody></table>'+nbox(px+'_cl')+'</div></div>'}
+
+// ── Dynamic section (from DB) ──────────────────────────────────
+function dynSec(sec){
+  var item=DB.find(function(d){return d.id===sec.dbId});
+  if(!item)return'<div class="sc"><div class="sh">'+sec.title+'</div><div class="sb"><p>Not found.</p></div></div>';
+  var px='dy_'+sec.iid;
+  var html='<div class="sc"><div class="sh">'+item.name+'</div><div class="sb">';
+  if(item.cat==='space'){
+    html+=clist(px,'Checklist',[
+      ['panel','Panelling & Furniture'],['curtains','Curtains & Blinds'],
+      ['locks','Locks, Latches & Hinges'],['lights','Lights & Switches'],
+      ['av','TV & Hi-Fi'],['marble','Marbles / Surfaces'],
+      ['bath','Bathroom Accessories'],['ac','Air Conditioning'],
+      ['safety','Safety Equipment']]);
+  } else {
+    var ct=item.cat==='full'?'full':item.cat==='surface'?'surface':'light';
+    var extras=item.fields.map(function(f,i){return['x'+i,f,'']});
+    html+=ccard(px,item.name,extras,ct);
+  }
+  html+=nbox(px)+'</div></div>';
+  return html;
+}
+
+// ── Fixed sections ─────────────────────────────────────────────
+function fixedSec(sid){
+  if(sid==='s1')return'<div class="sc"><div class="sh">1  General</div><div class="sb">'+
+    fld('g_vn','Vessel Name','text','M/Y ...')+fld('g_bld','Builder')+fld('g_mod','Model')+
+    fld('g_hul','Hull No.')+fld('g_yr','Year')+fld('g_flg','Flag / Registry')+
+    fld('g_off','Official Number')+fld('g_cs','Call Sign')+fld('g_imo','IMO')+
+    fld('g_msi','MMSI')+fld('g_own','Registered Owner')+nbox('s1')+'</div></div>';
+
+  if(sid==='s2')return'<div class="sc"><div class="sh">2  Main Characteristics</div><div class="sb">'+
+    fld('mc_tp','Type','text','Motor Yacht')+fld('mc_cn','Construction')+fld('mc_en','Engines')+
+    fld('mc_dp','Displacement (t)')+fld('mc_hc','Hull Colour')+fld('mc_sc','Superstructure Colour')+
+    '</div></div><div class="sc"><div class="sh2">Dimensions</div><div class="sb">'+
+    fld('mc_la','LOA (m)')+fld('mc_bm','Beam (m)')+fld('mc_dr','Draft (m)')+
+    fld('mc_ft','Fuel Tank (l)')+fld('mc_wt','Water Tank (l)')+
+    '</div></div><div class="sc"><div class="sh2">Capacities</div><div class="sb">'+
+    fld('mc_gst','Guest Berths')+fld('mc_crw','Crew Berths')+nbox('s2')+'</div></div>';
+
+  if(sid==='s3')return'<div class="sc"><div class="sh">3  Class &amp; Registration</div><div class="sb">'+
+    fld('cl_soc','Classification Society')+fld('cl_reg','Register No.')+fld('cl_not','Class Notation')+
+    fld('cl_svc','Service Notation')+fld('cl_exp','Class Survey Expiry')+fld('cl_ce','CE Category')+
+    nbox('s3')+'</div></div>';
+
+  if(sid==='s4')return'<div class="sc"><div class="sh">4  Survey Site</div><div class="sb">'+
+    fld('ss_loc','Location')+fld('ss_dt','Survey Dates')+
+    sfld('ss_md','Inspection Mode',['','Afloat / Berthed','Sea Trial','Dry Dock','Afloat + Sea Trial'])+
+    fld('ss_td','Sea Trial Date')+fld('ss_wx','Weather')+fld('ss_ha','Hull Haul-out')+
+    nbox('s4')+'</div></div>';
+
+  if(sid==='s7')return'<div class="sc"><div class="sh">7  Hull &amp; Bottom</div><div class="sb">'+
+    sfld('h_tp','Construction',['','GRP','GRP + Carbon','Aluminium','Steel','Other'])+
+    nbox('h_gen','General Notes')+'</div></div>'+
+    ccard('h_hl','Hull Topsides',[['paint','Paint Type',''],['lpaint','Last Paint Date','']],'surface')+nbox('h_hl')+
+    ccard('h_gl','Glazing',[['glass','Glass Type',''],['seal','Sealant','']],'surface')+nbox('h_gl')+
+    ccard('h_bt','Hull Bottom',[['afp','Anti-fouling',''],['lhaul','Last Haul-out',''],['osm','Osmosis','']],'surface')+nbox('h_bt')+
+    ccard('h_pr','Propellers',[['bld','Blades',''],['mat','Material',''],['dp','Diam x Pitch','']],'light')+nbox('h_pr')+
+    ccard('h_sh','Shafts & Sterngear',[['mat','Shaft Material',''],['seal','Seal Type',''],['str','Struts','']],'light')+nbox('h_sh')+
+    ccard('h_rd','Rudders',[['tp','Type',''],['act','Actuator','']],'light')+nbox('h_rd')+
+    ccard('h_an','Anodes',[['mat','Anode Material','Zinc / Aluminium'],['ren','Last Renewal','']],'surface')+nbox('h_an')+
+    ccard('h_sf','Skin Fittings',[['mat','Valve Material','Bronze / SS'],['cnt','No. of Thru-hulls','']],'surface')+nbox('h_sf');
+
+  if(sid==='s8')return'<div class="sc"><div class="sh">8  Top Deck &amp; Superstructure</div><div class="sb">'+
+    cfld('s8_c')+nbox('s8_sur','Deck Surface Notes')+'</div></div>'+
+    ccard('dk_tk','Teak Deck',[['caulk','Caulking','']],'surface')+nbox('dk_tk')+
+    ccard('dk_wl','Anchor Windlass',[['un','No. of Units','']],'light')+nbox('dk_wl')+
+    ccard('dk_an','Anchors & Chain',[['wt','Anchor Wt (kg)',''],['ch','Chain Length','']],'surface')+nbox('dk_an')+
+    ccard('dk_cp','Mooring Capstans',[],'light')+nbox('dk_cp')+
+    ccard('dk_rl','Rails & Gates',[['gw','Gangway Brand','']],'light')+nbox('dk_rl')+
+    ccard('dk_cv','Canvas & Awnings',[['mfr','Manufacturer',''],['yr','Year','']],'surface')+nbox('dk_cv');
+
+  if(sid==='s9')return clist('bil','9.1  Bilges',[
+    ['er','Engine Room'],['st','Steering Compartment'],['gs','Guest Cabin Area'],
+    ['cr','Crew Area'],['sb','Stabiliser Compartments'],['gr','Garage / Beach']])+
+    ccard('str','9.2  Stringers & Frames',[],'surface')+nbox('str')+
+    ccard('blk','9.3  Bulkheads',[],'surface')+nbox('blk');
+
+  if(sid==='s11')return'<div class="sc"><div class="sh">11  Propulsion System</div><div class="sb">'+
+    sfld('e_tp','Engine Type',['','4-stroke Diesel','2-stroke Diesel','Petrol','Electric','Hybrid'])+'</div></div>'+
+    ccard('eng','Main Engines',[['tp','Engine Type',''],['snp','S/N Port',''],['sns','S/N Stbd',''],['hp','Hrs Port',''],['hs','Hrs Stbd',''],['ls','Last Service',''],['nx','Next Service','']],'full')+nbox('eng')+
+    ccard('gbx','Gearboxes',[['rt','Ratio',''],['snp','S/N Port',''],['sns','S/N Stbd','']],'light')+nbox('gbx')+
+    ccard('ect','Engine Controls',[['tp','Type','']],'light')+nbox('ect')+
+    ccard('emt','Engine Mounts',[['tp','Type',''],['rn','Last Renewal','']],'light')+nbox('emt')+
+    ccard('exh','Exhaust',[['tp','Type','Wet / Dry']],'light')+nbox('exh')+
+    ccard('evn','ER Ventilation',[['fn','Fan Brand','']],'light')+nbox('evn');
+
+  if(sid==='s12')return ccard('g1','Generator 1 (Port)',[['pw','Power (kW)',''],['ph','Phases',''],['sn','Serial No.',''],['hr','Hours',''],['ls','Last Service','']],'full')+nbox('g1')+
+    ccard('g2','Generator 2 (Stbd)',[['pw','Power (kW)',''],['ph','Phases',''],['sn','Serial No.',''],['hr','Hours',''],['ls','Last Service','']],'full')+nbox('g2');
+
+  if(sid==='s13')return'<div class="sc"><div class="sh">13  Sea Trial</div><div class="sb">'+
+    fld('st_dt','Date')+fld('st_wx','Weather')+fld('st_ss','Sea State')+
+    fld('st_tp','Air Temp (\u00b0C)')+fld('st_fu','Fuel on Board (l)')+fld('st_px','Persons on Board')+'</div></div>'+
+    '<div class="sc"><div class="sh2">Performance Data</div><div class="sb">'+
+    '<table class="ct"><thead><tr><th>RPM</th><th>SOG (kn)</th><th>Fuel (l/h)</th><th>Range (nm)</th></tr></thead><tbody>'+
+    [600,800,1000,1200,1400,1600,1800,2000,'MAX'].map(function(r){
+      return'<tr><td>'+r+'</td>'+
+        '<td><input type="number" data-f="st_'+r+'_sog" value="'+esc(current.data['st_'+r+'_sog']||'')+'" oninput="af(this)"></td>'+
+        '<td><input type="number" data-f="st_'+r+'_fuel" value="'+esc(current.data['st_'+r+'_fuel']||'')+'" oninput="af(this)"></td>'+
+        '<td><input type="number" data-f="st_'+r+'_rng" value="'+esc(current.data['st_'+r+'_rng']||'')+'" oninput="af(this)"></td></tr>';
+    }).join('')+'</tbody></table>'+nbox('st_pf','Performance Notes')+'</div></div>'+
+    clist('st_sy','Systems Test',[
+      ['ac_ch','AC Chillers'],['ac_sw','AC Sea Water Pump'],['ac_fc','AC Fan Coils'],
+      ['el_sh','Shore Power'],['el_sw','Main Switchboard'],['el_uw','Underwater Lights'],
+      ['el_nl','Navigation Lights'],['bt_sv','Service Batteries'],['bt_en','Engine Batteries'],
+      ['bt_dg','Generator Batteries'],['bg_mn','Main Bilge'],['bg_al','Bilge Alarm'],
+      ['fd_fd','Fire Detection'],['fd_ff','Firefighting'],['fd_sp','Sprinkler Garage'],
+      ['fu_sy','Fuel System'],['fw_sy','Fresh Water System'],['bw_sy','Black & Grey Water'],
+      ['hy_sy','Hydraulic System'],['sc_sy','Sea Water Cooling'],
+      ['jc_sy','Jacuzzi'],['gw_sy','Stern Gangway'],
+      ['wl_p','Windlass Port'],['wl_s','Windlass Stbd'],
+      ['bt_bw','Bow Thruster'],['bt_st','Stern Thruster'],['stb','Stabilisers'],
+      ['str_al','Steering All Stations'],['ap','Autopilot'],
+      ['en_st','Engine Start/Stop'],['gn_st','Generator Start/Stop'],
+      ['nv_el','Navigation Electronics'],['wm_sy','Watermaker'],
+      ['cc_tv','CCTV'],['av_au','Audio System'],['av_vi','Video System'],
+      ['gs_dt','Gas Detection'],['wt_dr','Water-tightness'],
+    ])+
+    '<div class="sc"><div class="sh2">Cruising Impression</div><div class="sb">'+
+    afld('st_ci','General Impressions','Maneuverability, steering, noise, vibration...')+nbox('st_ci_ph')+'</div></div>';
+
+  if(sid==='s14')return ccard('ac','Air Conditioning',[['un','No. of Units',''],['rg','Refrigerant','R410A'],['cp','Capacity (kBTU)','']],'full')+nbox('ac')+
+    ccard('wm','Watermaker',[['cp','Capacity (l/h)',''],['hr','Running Hours','']],'full')+nbox('wm')+
+    ccard('stb','Stabilisers',[['tp','Type','Fin / Gyro / Zero Speed'],['cu','Control Unit','']],'light')+nbox('stb')+
+    ccard('hyd','Hydraulic System',[],'light')+nbox('hyd')+
+    ccard('elc','Electrical System',[['sv','Shore Power Voltage',''],['tr','Transformers',''],['gi','Galvanic Isolators','']],'light')+nbox('elc')+
+    clist('nav','Navigation Electronics',[['cp','Chartplotter'],['rd','Radar'],['ai','AIS'],['vh','VHF DSC'],['ap','Autopilot'],['ec','Echo Sounder'],['gp','GPS'],['ws','Weather Station'],['ep','EPIRB'],['sa','SART']])+
+    ccard('av','Entertainment',[['br','AV Brand',''],['in','Internet / Satellite','']],'light')+nbox('av')+
+    ccard('fir','Fire Safety',[['db','Detection Brand',''],['fa','Fixed FF Agent','CO2 / FM200']],'light')+nbox('fir')+
+    clist('lsa','Life Saving Appliances',[['lr','Liferafts'],['lj','Lifejackets'],['ep','EPIRB'],['py','Pyrotechnics'],['mk','Medical Kit'],['gb','Grab Bags'],['li','Liferings']]);
+
+  if(sid==='s15')return'<div class="sc"><div class="sh">15  Comments &amp; Conclusion</div><div class="sb">'+
+    afld('cc_ae','General Aesthetic Condition','')+nbox('cc_ae_ph')+
+    afld('cc_te','Technical Equipment Assessment','')+nbox('cc_te_ph')+
+    afld('cc_ex','External Areas','')+afld('cc_in','Interior Spaces','')+
+    '<div class="ambox"><label>\u26a0 Immediate Action Items</label>'+
+    '<textarea data-f="cc_im" placeholder="Safety items requiring immediate action before vessel enters service..." oninput="af(this)">'+esc((current&&current.data.cc_im)||'')+'</textarea></div>'+
+    nbox('cc_im_ph','Immediate Action Photos')+
+    afld('cc_st','Short-term Works (< 6 months)','')+
+    afld('cc_md','Medium-term Works (< 12 months)','')+
+    afld('cc_wa','Warranty / Claims Pending','')+
+    afld('cc_op',"Surveyor's Overall Opinion",'')+nbox('cc_fn','Final Photos')+
+    '<div style="background:#F8FBFF;border-radius:8px;border:1px solid var(--blm);padding:12px;margin-top:10px">'+
+    '<div style="font-size:11px;font-weight:700;color:var(--bl);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">Signature</div>'+
+    fld('cc_sn','Surveyor Name')+fld('cc_sq','Qualifications')+fld('cc_dt','Report Date')+'</div></div></div>';
+
+  return'<div class="sc"><div class="sh">'+sid+'</div><div class="sb"><p style="color:var(--t2)">Not implemented.</p></div></div>';
+}
+
+// ═══ EXPORT ═════════════════════════════════════════════════════
 function showExport(){
-  if(!current)return;snapFields();
-  show('expo');hide('editor');hide('abar');hide('snav');hide('prog');
-  const p=pct(current);
-  document.getElementById('exsum').innerHTML=`
-    <p><strong>Vessel:</strong> ${e(current.vn)||'—'} &bull; <strong>Model:</strong> ${e(current.model)||'—'}</p>
-    <p><strong>Surveyor:</strong> ${e(current.surveyor)||'—'} &bull; <strong>Date:</strong> ${current.date}</p>
-    <p style="margin-top:8px"><strong>Completion:</strong> ${p}%</p>
-    <div style="background:var(--bdr);border-radius:4px;height:5px;margin-top:5px">
-      <div style="background:var(--grn);width:${p}%;height:5px;border-radius:4px"></div></div>`;
+  if(!current)return;snap();
+  showStep('s-expo');hide('snav');hide('prog');hide('abar');
+  var p=pct(current);
+  document.getElementById('exsum').innerHTML=
+    '<p><b>Vessel:</b> '+esc(current.vn||'\u2014')+' &bull; <b>Model:</b> '+esc(current.model||'\u2014')+'</p>'+
+    '<p><b>Surveyor:</b> '+esc(current.surveyor||'\u2014')+' &bull; <b>Date:</b> '+current.date+'</p>'+
+    '<p style="margin-top:8px"><b>Sections:</b> '+getSections().length+' &bull; <b>Completion:</b> '+p+'%</p>'+
+    '<div style="background:var(--br);border-radius:4px;height:5px;margin-top:5px">'+
+    '<div style="background:var(--gn);width:'+p+'%;height:5px;border-radius:4px"></div></div>';
 }
 function exportJSON(){
-  if(!current)return;
-  const b=new Blob([JSON.stringify(current,null,2)],{type:'application/json'});
-  const u=URL.createObjectURL(b);const a=document.createElement('a');
-  a.href=u;a.download=`Survey_${(current.vn||'vessel').replace(/\s+/g,'_')}_${current.date.replace(/\//g,'-')}.json`;
+  var b=new Blob([JSON.stringify(current,null,2)],{type:'application/json'});
+  var u=URL.createObjectURL(b);var a=document.createElement('a');
+  a.href=u;a.download='Survey_'+esc(current.vn||'vessel').replace(/\s+/g,'_')+'_'+current.date.replace(/\//g,'-')+'.json';
   a.click();URL.revokeObjectURL(u);toast('JSON saved \u2713');
 }
 function exportHTML(){
-  if(!current)return;const d=current.data;const ph=current.photos;
-  const cr=v=>{const c={'GOOD':'#1D9E75','SATISFACTORY':'#639922','FAIR':'#BA7517','UNSATISFACTORY':'#A32D2D','POOR':'#E24B4A','NOT INSPECTED':'#888'};return`<b style="color:${c[v]||'#555'}">${v||'—'}</b>`};
-  const rw=(l,v)=>v?`<tr><td style="padding:5px 8px;color:#555;font-size:13px;width:35%;border-bottom:1px solid #eee">${l}</td><td style="padding:5px 8px;font-size:13px;border-bottom:1px solid #eee">${v}</td></tr>`:'';
-  const phs=ids=>ids.map(id=>ph[id]?`<img src="${ph[id]}" style="width:49%;border-radius:6px;margin:4px .5%" alt="photo">`:'').join('');
-  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Survey – ${e(current.vn)}</title>
-  <style>body{font-family:Arial,sans-serif;max-width:900px;margin:0 auto;padding:20px;color:#111}h1{color:#1F3864}h2{color:#2E5FA3;border-bottom:2px solid #2E5FA3;padding-bottom:4px;margin-top:24px}table{width:100%;border-collapse:collapse}.sec{background:#F8FBFF;border-radius:8px;padding:12px 16px;margin-bottom:20px}.nb{background:#EBF3FB;border-left:3px solid #2E5FA3;padding:8px 12px;border-radius:0 6px 6px 0;margin-top:8px;font-size:13px}@media print{body{padding:0}}<\/style><\/head>
-  <body>
-  <h1>Marine Survey Report — Pre-Purchase Condition</h1>
-  <p><b>Vessel:</b> ${e(current.vn)} &bull; <b>Model:</b> ${e(current.model)} &bull; <b>Hull:</b> ${e(current.hull)}</p>
-  <p><b>Surveyor:</b> ${e(current.surveyor||d.cc_sn)} &bull; <b>Date:</b> ${d.cc_dt||current.date}</p>
-  <hr>
-  <h2>1 — General</h2><div class="sec"><table>${rw('Builder',d.g_bld)}${rw('Flag',d.g_flg)}${rw('Official No.',d.g_off)}${rw('IMO',d.g_imo)}${rw('MMSI',d.g_msi)}${rw('Owner',d.g_own)}</table>${d.s1_n?`<div class="nb">${d.s1_n}</div>`:''}</div>
-  <h2>2 — Characteristics</h2><div class="sec"><table>${rw('Construction',d.mc_cn)}${rw('Engines',d.mc_en)}${rw('LOA',d.mc_la?d.mc_la+' m':'')}${rw('Beam',d.mc_bm?d.mc_bm+' m':'')}${rw('Draft',d.mc_dr?d.mc_dr+' m':'')}${rw('Fuel Tank',d.mc_ft?d.mc_ft+' l':'')}${rw('Water Tank',d.mc_wt?d.mc_wt+' l':'')}</table></div>
-  <h2>7 — Hull & Bottom</h2><div class="sec"><table>${rw('Construction',d.h_tp)}${rw('Hull Condition',cr(d.h_hl_cond))}${rw('Anti-fouling',d.h_bt_afp)}${rw('Last Haulage',d.h_bt_lhaul)}${rw('Propellers',d.h_pr_model)}${rw('Shaft Seals',d.h_sh_seal)}</table>${d.h_gen_n?`<div class="nb">${d.h_gen_n}</div>`:''}<br>${phs(['h_hl_p1','h_hl_p2','h_bt_p1','h_pr_p1'])}</div>
-  <h2>11 — Propulsion</h2><div class="sec"><table>${rw('Engine Brand',d.eng_brand)}${rw('Model',d.eng_model)}${rw('Serial Port',d.eng_snp)}${rw('Serial Stbd',d.eng_sns)}${rw('Hours Port',d.eng_hp)}${rw('Hours Stbd',d.eng_hs)}${rw('Last Service',d.eng_ls)}${rw('Condition',cr(d.eng_cond))}</table>${d.eng_n?`<div class="nb">${d.eng_n}</div>`:''}<br>${phs(['eng_p1','eng_p2'])}</div>
-  <h2>12 — Generators</h2><div class="sec"><table>${rw('Gen 1 Brand',d.g1_brand)}${rw('Gen 1 Model',d.g1_model)}${rw('Gen 1 Hours',d.g1_hr)}${rw('Gen 1 Condition',cr(d.g1_cond))}${rw('Gen 2 Brand',d.g2_brand)}${rw('Gen 2 Model',d.g2_model)}${rw('Gen 2 Hours',d.g2_hr)}${rw('Gen 2 Condition',cr(d.g2_cond))}</table></div>
-  <h2>15 — Conclusions</h2><div class="sec">
-  ${d.cc_im?`<p style="background:#FFF3CD;padding:10px;border-radius:6px"><b>&#9888; IMMEDIATE ACTION ITEMS</b><br>${d.cc_im}</p>`:''}
-  ${d.cc_st?`<p><b>Short-term works:</b> ${d.cc_st}</p>`:''}
-  ${d.cc_md?`<p><b>Medium-term works:</b> ${d.cc_md}</p>`:''}
-  ${d.cc_wa?`<p><b>Warranty claims:</b> ${d.cc_wa}</p>`:''}
-  ${d.cc_op?`<p><b>Overall opinion:</b> ${d.cc_op}</p>`:''}
-  ${phs(['cc_fn_p1','cc_fn_p2'])}</div>
-  <p style="margin-top:30px;border-top:1px solid #ccc;padding-top:12px;font-size:12px;color:#555">PREPARED WITHOUT PREJUDICE — ${e(d.cc_sn||current.surveyor)} — ${d.cc_sq||''} — ${d.cc_dt||current.date}</p>
-  
-<script>
-if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  var d=current.data;var ph=current.photos;
+  function cr(v){var c={GOOD:'#1D9E75',SATISFACTORY:'#639922',FAIR:'#BA7517',UNSATISFACTORY:'#A32D2D',POOR:'#E24B4A','NOT INSPECTED':'#888'};return'<b style="color:'+(c[v]||'#555')+'">'+(v||'\u2014')+'</b>';}
+  function rw(l,v){if(!v)return'';return'<tr><td style="padding:5px 8px;color:#555;font-size:13px;width:35%;border-bottom:1px solid #eee">'+l+'</td><td style="padding:5px 8px;font-size:13px;border-bottom:1px solid #eee">'+v+'</td></tr>';}
+  function phs(ids){return ids.map(function(id){return ph[id]?'<img src="'+ph[id]+'" style="width:49%;border-radius:6px;margin:2px .5%" alt="">':''}).join('');}
+
+  var out='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Survey '+esc(current.vn)+'</title>';
+  out+='<style>body{font-family:Arial,sans-serif;max-width:900px;margin:0 auto;padding:20px;color:#111}';
+  out+='h1{color:#1F3864}h2{color:#2E5FA3;border-bottom:2px solid #2E5FA3;padding-bottom:4px;margin-top:24px}';
+  out+='table{width:100%;border-collapse:collapse}.sec{background:#F8FBFF;border-radius:8px;padding:12px 16px;margin-bottom:18px}';
+  out+='@media print{body{padding:0}}<\/style><\/head><body>';
+  out+='<h1>Marine Survey Report &mdash; Pre-Purchase Condition</h1>';
+  out+='<p><b>Vessel:</b> '+esc(current.vn)+' &bull; <b>Model:</b> '+esc(current.model||'')+' &bull; <b>Hull:</b> '+esc(current.hull||'')+'</p>';
+  out+='<p><b>Surveyor:</b> '+esc(d.cc_sn||current.surveyor||'')+' &bull; <b>Date:</b> '+(d.cc_dt||current.date)+'</p><hr>';
+
+  out+='<h2>General</h2><div class="sec"><table>';
+  out+=rw('Builder',d.g_bld)+rw('Flag',d.g_flg)+rw('Official No.',d.g_off)+rw('IMO',d.g_imo)+rw('MMSI',d.g_msi)+rw('Owner',d.g_own);
+  out+='</table></div>';
+
+  out+='<h2>Characteristics</h2><div class="sec"><table>';
+  out+=rw('Construction',d.mc_cn)+rw('Engines',d.mc_en)+rw('LOA',d.mc_la?d.mc_la+' m':'')+rw('Beam',d.mc_bm?d.mc_bm+' m':'')+rw('Draft',d.mc_dr?d.mc_dr+' m':'');
+  out+='</table></div>';
+
+  out+='<h2>Hull &amp; Bottom</h2><div class="sec"><table>';
+  out+=rw('Construction',d.h_tp)+rw('Hull Condition',cr(d.h_hl_co))+rw('Propellers',d.h_pr_mo)+rw('Shaft Seals',d.h_sh_seal)+rw('Anti-fouling',d.h_bt_afp)+rw('Last Haulage',d.h_bt_lhaul);
+  out+='</table>'+(d.h_gen_n?'<p style="font-style:italic;color:#555">'+d.h_gen_n+'</p>':'')+phs(['h_hl_1','h_hl_2','h_bt_1','h_pr_1'])+'</div>';
+
+  out+='<h2>Propulsion</h2><div class="sec"><table>';
+  out+=rw('Engine Brand',d.eng_br)+rw('Model',d.eng_mo)+rw('S/N Port',d.eng_snp)+rw('S/N Stbd',d.eng_sns)+rw('Hours Port',d.eng_hp)+rw('Hours Stbd',d.eng_hs)+rw('Last Service',d.eng_ls)+rw('Condition',cr(d.eng_co));
+  out+='</table>'+(d.eng_n?'<p style="font-style:italic;color:#555">'+d.eng_n+'</p>':'')+phs(['eng_1','eng_2'])+'</div>';
+
+  out+='<h2>Generators</h2><div class="sec"><table>';
+  out+=rw('Gen 1 Brand',d.g1_br)+rw('Gen 1 Model',d.g1_mo)+rw('Gen 1 Hours',d.g1_hr)+rw('Gen 1 Condition',cr(d.g1_co));
+  out+=rw('Gen 2 Brand',d.g2_br)+rw('Gen 2 Model',d.g2_mo)+rw('Gen 2 Hours',d.g2_hr)+rw('Gen 2 Condition',cr(d.g2_co));
+  out+='</table></div>';
+
+  // Dynamic items
+  out+='<h2>Components &amp; Spaces</h2>';
+  (current.dynItems||[]).forEach(function(di){
+    var item=DB.find(function(x){return x.id===di.dbId});if(!item)return;
+    var px='dy_'+di.iid;
+    out+='<div class="sec"><b>'+item.name+'</b>';
+    if(item.cat!=='space'){
+      out+='<table style="margin-top:8px">';
+      out+=rw('Brand',d[px+'_br'])+rw('Model',d[px+'_mo']);
+      if(item.cat==='full')out+=rw('Serial',d[px+'_sn'])+rw('Hours',d[px+'_hr']);
+      out+=rw('Condition',cr(d[px+'_co']));
+      out+='</table>';
+    }
+    if(d[px+'_n'])out+='<p style="font-style:italic;color:#555;margin-top:8px">'+d[px+'_n']+'</p>';
+    out+=phs([px+'_1',px+'_2'])+'</div>';
   });
-}
-<\/script>
-<\/body><\/html>`;
-  const b=new Blob([html],{type:'text/html'});const u=URL.createObjectURL(b);
-  window.open(u,'_blank');setTimeout(()=>URL.revokeObjectURL(u),5000);toast('Report opened \u2713');
+
+  out+='<h2>Conclusions</h2><div class="sec">';
+  if(d.cc_im)out+='<p style="background:#FFF3CD;padding:10px;border-radius:6px"><b>\u26a0 IMMEDIATE ACTION ITEMS</b><br>'+d.cc_im+'</p>';
+  if(d.cc_st)out+='<p><b>Short-term:</b> '+d.cc_st+'</p>';
+  if(d.cc_md)out+='<p><b>Medium-term:</b> '+d.cc_md+'</p>';
+  if(d.cc_wa)out+='<p><b>Warranty claims:</b> '+d.cc_wa+'</p>';
+  if(d.cc_op)out+='<p><b>Overall opinion:</b> '+d.cc_op+'</p>';
+  out+=phs(['cc_fn_1','cc_fn_2'])+'</div>';
+
+  out+='<p style="margin-top:28px;border-top:1px solid #ccc;padding-top:10px;font-size:12px;color:#555">';
+  out+='PREPARED WITHOUT PREJUDICE &mdash; '+esc(d.cc_sn||current.surveyor||'')+' &mdash; '+(d.cc_sq||'')+' &mdash; '+(d.cc_dt||current.date);
+  out+='<\/p><\/body><\/html>';
+
+  var b=new Blob([out],{type:'text/html'});var u=URL.createObjectURL(b);
+  window.open(u,'_blank');setTimeout(function(){URL.revokeObjectURL(u)},5000);toast('Report opened \u2713');
 }
 function shareRep(){
-  if(navigator.share){navigator.share({title:`Survey – ${current.vn||'vessel'}`,text:'Marine Survey Report'}).catch(()=>{})}
-  else toast('Use Export buttons above');
+  if(navigator.share){navigator.share({title:'Survey '+(current.vn||''),text:'Marine Survey Report'}).catch(function(){});}
+  else toast('Use Export buttons');
 }
+
+// ═══ INIT ═══════════════════════════════════════════════════════
 showHome();
 </script>
-
 <script>
-if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('sw.js').catch(()=>{});
-  });
-}
+if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}
 </script>
 </body>
 </html>
