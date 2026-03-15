@@ -434,7 +434,7 @@ function renderDbList(){
         '<div class="db-item-meta">' + (grpLabel[item.group]||item.group) + ' &bull; ' + fields + '</div>' +
       '</div>' +
       '<span class="cbadge ' + (typeColor[item.cat]||'cb-surf') + '">' + (typeLabel[item.cat]||item.cat) + '</span>' +
-      (isUser ? '<button class="db-del" onclick="delDbItem(''+item.id+'')" title="Delete">&times;</button>' :
+      (isUser ? '<button class="db-del" onclick="delDbItem(\''+item.id+'\''+')" title="Delete">&times;</button>' :
                 '<span style="font-size:11px;color:var(--t3);padding:0 6px">built-in</span>') +
     '</div>';
   }).join('');
