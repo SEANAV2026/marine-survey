@@ -102,6 +102,9 @@ select.cn{background-color:#F1EFE8;color:#444;border-color:#B4B2A9}
 .db-item-meta{font-size:11px;color:var(--t2);margin-top:2px}
 .db-del{background:none;border:none;color:var(--rd);font-size:20px;cursor:pointer;padding:0 4px;line-height:1;flex-shrink:0}
 .db-del:active{color:#E24B4A}
+
+.ck-note-row td{padding:2px 6px 6px!important}
+.ct td input[type=text]{width:100%;font-size:12px}
 </style>
 </head>
 <body>
@@ -237,6 +240,737 @@ select.cn{background-color:#F1EFE8;color:#444;border-color:#B4B2A9}
 <div id="toast"></div>
 
 <script>
+var CHKLISTS = {
+  's13_fire': {
+    label: 'Dock trials Fire and safety',
+    sections: [
+      { name:'BILGE PUMP checks', items:[
+        'Main pump 380/220V and 24V pumps: verify installation and flood bilge compartments to verify correct discharging',
+        'Electric bilge valves activated from monitoring and sinoptic panels systems (all station); local manual operation with key (open / close)',
+        'Monitoring: correct activation & signals. All stations to be checked (wheelhouse, crew area,engine room)',
+        'Sinoptic panels (flybridge, wheelhouse, crew area,engine room); check sirens on the mast and in engine room',
+        'Check the accessibility at the overboard valve of the 24V pumps',
+        'bypass operation with main fire pump',
+        'Start and Stop Main bilge pump from all stations (fly,wheelhouse,monitoring,crew,engine etc)',
+        'Fire hydrant valves, with fire hoses and nozzles, will be fitted in the following positions: • nr.2 on maindeck, • nr.1 on upperdeck. • nr.1 on aft area • nr.1 ',
+        '2 hoses connected, one in the main deck cockpit and one in the bow',
+        'bypass operation with main bilge pump',
+        'Start and Stop Main fire pump from all stations (fly,wheelhouse,monitoring,crew,engine, anchor windlass remote controls)',
+        'Relief valve in the chain locker',
+        'Fire isolation main valve (gate valve): 1 to isolate the e.r. and maybe one more on fwd (check drawings)',
+        'STD > Portable CO2/foam/powder fire extinguishers, stored in suitable places, will be provided as per fire and safety plan',
+      ]},
+      { name:'EMERGENCY fire/bilge diesel pump checks', items:[
+        'Nr. 1 motorpump will be installed for bilge and fire systems. STD',
+        'pump installation',
+        'Start and stop with key and manual lever',
+        'Battery installation; check voltage locally and in the monitoring system',
+        '2 hoses connected, one in the main deck cockpit and one in the bow; suction of the bilge installed faraway of the pump',
+      ]},
+      { name:'Sprinkler system in the garage (sea water)', items:[
+        'Visual check of all components and their proper installation',
+        'Interception valve accessibility and protection',
+        'System test',
+      ]},
+      { name:'Fire detection system tests', items:[
+        'Call points',
+        'Smoke detectors',
+        'Heat detectors: verify all the emergency stops in the galley when the heat detector is activated (dampers, hood, electric fire door, electric subpanel breaker)',
+        'Gas detector: generally installed in the garage: check lights OFF, outlets OFF, ventilation OFF (if the extractor is NOT anti explosion type, if anti explosion ',
+        'Sirens of the general alarm; sirens in engine room and mast',
+        'Fault sensor test',
+        'Monitoring system signals: check both, system unit and monitoring',
+        '24V battery power supply: test at spot of the system; check alarm in case of main power supply (220V) fault',
+      ]},
+      { name:'Emergency stop KNOBS (Engines, genersators, ventilation, fuel transfer', items:[
+        'Check every single knob with the dedicated machinery activated',
+        'Monitoring system alarms and sinoptic panel alarms (local in engine control room)',
+        'Diesel oil quick closing valve closure: check also availaibility to open/close them manually',
+        'Fire dampers check and indicators (check the correct space to insert the emergency key)',
+      ]},
+      { name:'Novec / Sea fire tests /FM 200', items:[
+        'Activate the system with ENGINES, GENERATORS, FUEL TRANSFER PUMP, PURIFIER, VENTILATION  ON',
+        'Monitoring system alarms and sinoptic panel alarms (local in engine control room)',
+        'Override test: start everything ON again with the FM 200 sytem activated',
+      ]},
+      { name:'Galley emergency stop', items:[
+        'Visual check of all components and their proper installation on board (CO2 cylinder, lever accessibility, emergency knob etc)',
+        'hood extraction fire damper closing; hood extraction OFF',
+        'galley extractor fire damper closing; galley extraction OFF',
+        'UTA fire damper closing',
+        'Balancing (natural aeration) fire damper closing',
+        'galley subpanel breaker OFF',
+        'Fire door release (see fire door section)',
+        'Manual stop commands (if any)',
+      ]},
+      { name:'Fuel oil system', items:[
+        'Fuel Oil tanks capacity: 22,500 litres STD',
+        'Visual check of all components and their proper installation on board',
+        'Transfer pumps 380/220V and 24V operation (local and remote from control room and monitoring); check auto transfer',
+        'Diesel oil tanks high level alarms (to be verified all)',
+        'Test OVERFLOW tank (check the drawings): if installed a sensor (or more sensors) connected with the fuel ingress in the overflow tank, it has to be tested (this',
+        'Correct signalling of tanks level (check them also during sea trial to see if no particular difference is detected) in the monitoring and the visual check',
+        'Access to sounding devices',
+        'OPT> Double Racor filters for generators; test water in the filters (generally is requested a cable bridge to have the alarm)',
+        'Fuel oil filters installation / accessibility (main ones for both generators and engines)',
+        'Deck filling point',
+        'Monitoring system',
+        'OPT>Alfa Laval fuel filtering system',
+        'Suction from storage (tanks)  to daily',
+        'Suction from daily to storage  (tanks)',
+        'OPT>Tender filling station from main fuel tanks',
+        'Automatic stop after a certain amount of time it is not working (in case the user forgets the pump ON)',
+        'OPT> Oil change system for main engines and generators',
+        'Start and Stop from each station (local, remote, monitoring)',
+        'Suction from lube oil tank / suction from the barrel',
+        'Delivery to lube oil tank / delivery to fittings',
+      ]},
+      { name:'Dirty oil pump', items:[
+        'Visual check of all components and their proper installation on board',
+        'Start and Stop from each station (local, remote, monitoring)',
+        'Suction from fittings / suction from dirty oil tank',
+        'Delivery to dirty oil tank / delivery ashore',
+      ]},
+      { name:'Engine tests', items:[
+        'MTU16V2000M96, of 1790 kW (2400 BHP) @ 2450 rpm each STD',
+        'WHEELHOUSE Starting sequence and emergency shut down + override',
+        'PORT WS Starting sequence and emergency shut down + override',
+        'STBD WS Starting sequence and emergency shut down + override',
+        'ADDITIONAL STATIONS (aft or remote control)',
+      ]},
+      { name:'Engine neutral safety tests', items:[
+        'WHEELHOUSE Advance throttle in ahead and reverse position and attempt to start engine',
+        'PORT WS Advance throttle in ahead and reverse position and attempt to start engine',
+        'STBD WS Advance throttle in ahead and reverse position and attempt to start engine',
+        'ADDITIONAL STATIONS Advance throttle in ahead and reverse position and attempt to start engine',
+      ]},
+      { name:'Generator Tests', items:[
+        'KOHLER 70 kW 70EFOZDJ (MODEL) STD',
+        'OPT>Electric stern thruster (requires upgraded generators included in the price)',
+        'ON / OFF sequence and ON / emergency shut down local from the generators',
+        'ON / OFF sequence from the control room',
+        'ON / OFF sequence from the monitoring',
+      ]},
+      { name:'Emergency lights system and emergency batteries tests', items:[
+        'Black out on board: check internal and external lights',
+        'Black out on board: check all the devices connected with the emergency batteries (check correct labels on the breakers)',
+        'Visual check of the emergency batteries box and correct installation (secured and ventilated and labelled)',
+        'Extractor and flowswitch: verify alarm for no flowswitch/extractor off (monitoring and synoptic panel)',
+        'Battery charger correct installation and functionality and labelling',
+        'Batteries switches (monitoring and local)',
+        'One group of batteries for radio equipment. std',
+        'Visual check of the radio batteries box and correct installation (secured and ventilated and labelled)',
+        'Test of the connected devices excluding the 220V power supply',
+        'One group of batteries for services. std',
+        'Visual check of the service batteries box and correct installation (secured and ventilated and labelled)',
+      ]},
+      { name:'Generators batteries', items:[
+        'Visual check of the generators batteries box and correct installation (secured and ventilated and labelled)',
+        'Battery charger correct installation and functionality and labelling',
+        'Batteries switches (monitoring and local)',
+      ]},
+      { name:'Engines batteries', items:[
+        'Visual check of the engines batteries box and correct installation (secured and ventilated and labelled)',
+        'Battery charger correct installation and functionality and labelling',
+        'Batteries switches (monitoring and local)',
+      ]},
+      { name:'Bow thruster batteries', items:[
+        'Visual check of the bow thruster batteries box and correct installation (secured and ventilated and labelled)',
+        'Battery charger correct installation and functionality and labelling',
+        'Batteries switches (monitoring and local)',
+        'One group of batteries for motorpump starter.',
+        'Visual check of the engines batteries box and correct installation (secured and ventilated and labelled)',
+      ]},
+      { name:'Auxiliary batteries', items:[
+        'Visual check of the auxiliary batteries box and correct installation (secured and ventilated and labelled)',
+        'Battery charger correct installation and functionality and labelling',
+        'Batteries switches (monitoring and local)',
+      ]},
+      { name:'Garage exctractor', items:[
+        'Visual check and correct installation',
+        'Extractor and flowswitch: verify alarm for no flowswitch/extractor off (monitoring and synoptic panel)',
+      ]},
+      { name:'Navigation lights tests', items:[
+        'Visual check of all components and their proper installation',
+        'Main power supply',
+        'Emergency power supply',
+        'Fault alarm (check every single light: remove the fuse for simulation)',
+        'Monitoring system and sinoptic panel',
+      ]},
+      { name:'Emergency exits and ladders', items:[
+        'Easy accessibility and indication, monitoring system (if conected)',
+        'Check the aesthetic aspect especially if located in the guest areas',
+      ]},
+      { name:'Watertightness test with high water pressure', items:[
+        'Portholes',
+        'Watertight hatches & doors : eng room, garage',
+        'Weathertight doors > portside access to eng room, port side access to galley, stb side access to foyer, wheelhouse port and starboard side',
+        'Electric windows',
+        'STD > 15” touchscreen panel + 7,5” touchscreen panel , for alarms monitoring , will be supplied in captain’s quarter.',
+        'Check every single page of the monitoring system',
+      ]},
+      { name:'INTERCOM System', items:[
+        'standard > One emergency internal communication system will be fitted in: • wheelhouse, • engine room, • emergency steering location. • aft cockpit • fore moori',
+        'Check every single station of the system',
+        'Earphones in engine room',
+      ]},
+      { name:'GENERAL ALARM', items:[
+        'Switch in the wheelhouse: set FIRE DETECTION SYSTEM OFF',
+        'BACK UP system power supply MUST be by EMERGENCY BATTERIES',
+      ]},
+    ]
+  },
+  's13_hotel': {
+    label: 'Dock trials hotelfunctional syt',
+    sections: [
+      { name:'Fresh water system', items:[
+        'Visual check of all components and their proper installation on board: UV lamps; filters; water softner; silver ions dosing unit; fw manifolds',
+        '380/220V pump : functionality, status locally on the display (Reset button and led)',
+        '24V pump : functionality, status locally on the display (Reset button and led)',
+        'Boilers and circulation pumps (2)  > n. 2 electric hot water stainless steel heaters with capacity of 200 litres (STANDARD config.)',
+        'Deck filling point',
+        'Deck washdown points (n. 6 as per standard spec.)',
+        'Exterior showers STD Hand held shower with hot and cold water will be provided for the beach area.',
+        'Interior showers',
+        'Exterior sinks',
+        'OPT > Shower in the beach area',
+        'Interior sinks',
+        'WC FW Supply including solenoid valve',
+        'Fridge & Icemaker supply',
+        'Windshield wiper wash FW supply',
+        'Fresh water supply direct from the quay (fresh water pumps OFF and check the connection)',
+        'Fresh water tank overflow: check top of the tank and vent pipe',
+        'Access to sounding devices',
+        'Monitoring system',
+        'standard> Total Fresh Water tank capacity: 4,000 litres',
+      ]},
+      { name:'Black water systems', items:[
+        'OPT> WC/bidet combo in guests\',vip and master\'s heads',
+        'Visual check of all components and their proper installation on board',
+        'OPT > WC e-breeze in lieu of the std ones in master\'s head, stbd guest head, vip heads',
+        'WC Toilet discharge to tank',
+        'WC Toilet discharge directly at sea',
+        'Pump overboard discharge',
+        'Deck suction or ashore discharge',
+        'BW High level alarm',
+        'Pumps by-pass discharge (GW-BW)',
+        'Tank washing',
+        'Total Sewage tank capacity: 1,600 litres std',
+        'Access to the odor filter',
+        'Access to the tank sounding devices',
+        'Monitoring system',
+      ]},
+      { name:'Grey water system', items:[
+        'Visual check of all components and their proper installation on board',
+        'GW Sanisplits & sump boxes (access, installation & operation)',
+        'GW Drainage of all sinks and showers',
+        'Galley sink drain 3 way valve',
+        'Galley grease trap: test ; accessibility for elements replacemnet',
+        'GW Pump overboard discharge',
+        'GW High level alarm',
+        'Deck suction or ashore discharge',
+        'Pumps by-pass discharge (BW-GW)',
+        'Total Greywater tank capacity: 1,900 litres std',
+        'Tank washing',
+        'Access to the odor filter',
+        'Access to the tank sounding devices',
+        'Monitoring system',
+        'N. A. (only by opt)',
+        'Visual check of all components and their proper installation on-board',
+        'Treatment system',
+        'Overboard discharge without treatment (manual operation on the touch screen)',
+        'Sludge high level alarm on the monitoring system (in addition to the one on the hamann display). NOTE: the high level must stop the treatment system',
+        'Sludge tank overboard discharge',
+        'Sludge tank ashore discharge',
+        'Monitoring',
+      ]},
+      { name:'Air Conditioning Systems', items:[
+        'Visual check of all components and their proper installation on board',
+        'Chillers',
+        'Chilled loop water pumps: both to be tested',
+        'Sea water pumps : both to be tested',
+        'Fancoils installations',
+        'Fancoils drains',
+        'Fancoils controllers',
+        'Air conditioning test (heating and cooling using compressors separately)',
+        'UTA installation',
+        'UTA drain',
+        'UTA test',
+        'Monitoring',
+      ]},
+      { name:'Refrigerating room compressors', items:[
+        'Visual check of all components and their proper installation on board',
+        'Sea water pump and sea chest',
+        'Control panel',
+      ]},
+      { name:'E.R. ventilation checks', items:[
+        'Visual check of all components and their proper installation on board',
+        'Ventilators as blower and extractor to be tested locally and remote',
+        'Fire dampers check and indicators (check the correct space to insert the emergency key)',
+        'Monitoring',
+      ]},
+      { name:'ASEA', items:[
+        'Visual check of all components and their proper installation on board',
+        'Cooling system with main chiller',
+        'Cooling system when the AC is in winter mode',
+      ]},
+      { name:'Electrical systems checks/tests', items:[
+        'Engine room main switchboard check',
+        'Sub panels check',
+        'one 125 A shore power connector located in the aft area of the yacht STD',
+        'One 80 KVA 400 V AC (inlet) / 400 V AC (outlet) shore insulating transformer will be installed. Rated voltage and frequency: 400V AC / 50 Hz  STD',
+        'Every possible solutuion: 1 shore cable AFT and 1 FWD; 2 shore cable on aft etc',
+        'Shore to Generators (monitoring and local)',
+        'Generators to Shore (monitoring and local)',
+        'Generators load sharing (monitoring and local)',
+        'Power supply electric passage in emergency (manual selector)',
+        'Monitoring',
+      ]},
+      { name:'All sea water cooling systems', items:[
+        'Visual check of all components and their proper installation on board',
+        'Accessibility for maintenance of sea chests/strainers',
+        'Valves accessibility and operation',
+        'OPT > Automatic upgraded integrated ladder in the beach area transom door',
+        'Normal operation from cockpit and any other station both pumps 380/24V',
+        'Emergency electrically',
+        'Emergency manually',
+        'Remote controls',
+        'OPT > Fixed swimming platform with teak flooring',
+      ]},
+      { name:'Transom door aft', items:[
+        'Visual check of all components and their proper installation on board',
+        'Normal operation from cockpit both pumps 380/24V',
+        'Emergency electrically',
+        'Emergency manual lever with power pack',
+        'Emergency with pulley',
+        'Remote controls',
+      ]},
+      { name:'Side garage door (STB side)', items:[
+        'Visual check of all components and their proper installation on board',
+        'Normal operation locally and remote',
+        'Emergency electrically',
+        'Emergency manually',
+        'Hauling and Launching System for the Tender STD',
+      ]},
+      { name:'Jet ski carriages and winches', items:[
+        'Visual check of all components and their proper installation on board',
+        'Normal operation locally and remote',
+        'Emergency electrically',
+        'Emergency manually',
+        'OPT > N.1 shore power automatic reel',
+        'All out and all in to check switch limiters',
+        'Remote controls',
+      ]},
+      { name:'Lights tests', items:[
+        'interiors',
+        'OPT > 6 spotlights on aft maindeck (EXT)',
+        'neon lights In the engine room STD',
+        'Inside wardrobe lights',
+        'exteriors',
+        'OPT > 4 pop up lights in the bow area',
+        'Technical areas lights',
+        'UWL > OPT 8 Aqualuma underwater lights',
+        'Monitoring',
+      ]},
+      { name:'INTERCOM', items:[
+        'All stations  STD One emergency internal communication system will be fitted in: • wheelhouse, • engine room, • emergency steering location. • aft cockpit • for',
+        'Earphones in engine room',
+        'OPT > Cordless Telephones (1 master and 9 slaves)',
+        'A PABX system (phones available as option) will be provided STD',
+        'Sockets will be placed in the following areas: • wheelhouse, • salon (MD and UD), • galley, • master cabin, • VIP cabins, • guest cabins, • crew mess, • captain',
+        'air compressor (tank capacity 6 lt) for general purposes will be installed in engine room (STAND installation)',
+        'Visual check of all components and their proper installation on board',
+        'All stations test',
+      ]},
+      { name:'Horn system', items:[
+        'A pneumatic horn with dedicated compressor will be installed STD',
+        'Visual check of all components and their proper installation on board: horn resevoir accessibility and purging system',
+        'One Jabsco search light will be installed. STD',
+        'Fly',
+        'Wheelhouse',
+        'Monitoring',
+      ]},
+      { name:'Windhshield wipers test', items:[
+        'Visual check of all components and their proper installation on board',
+        'Monitoring',
+        'Emergency',
+        'Stainless steel grids will be provided for scuppers on external decks',
+        '1 whirlpool tub will be installed on the bow living area as per General Arrangement (standard installation)',
+        'Control panel',
+        'Drain emergency mode',
+        'OPT > Videocamera package: fixed camera in aft cockpit , pivoting-tilting-zooming camera in engine room and predisposition for 8 cameras',
+        'OPT > 2 additional fixed cameras on the sideways (one each side)  + 2 additional fixed cameras for mooring + 1 additional 360° camera mast  + 1 additional fixed',
+      ]},
+      { name:'CCTV Flir Thermal camera tests', items:[
+        'STANDARD configuration as below:',
+        'CREW MESS TV 24’’ LG Led, Digital/Analog Converter, Tuner CD/DVD Pioneer DHV340, Power supply Meanwell 220/12Vdc, Loudspeakers Sony SFB1320, Pair of grid (Black',
+        'TWIN GUEST CABINS be considered for two cabins. TV 32’’ LG Led Smart Tv, Apple Tv 4K 64Gb, Sonos Beam, Sonos Beam wall mount, Programmable remote control.',
+        'VIP CABINS be considered for two cabins. TV 32’’ LG Led Smart Tv, Apple Tv 4K 64Gb, Sonos Beam, Sonos Beam wall mount, Programmable remote control.',
+        'CREW CABINS be considered for three cabins./MP3 Sony CDXG1200, Power supply Meanwell 220/12Vdc, Loudspeakers Sony SFB1320, Pair of grid (Black or White).',
+        'OWNER’S CABIN TV 49’’ LG Led Smart Tv, Apple Tv 4K 64Gb, Sonos Amp, Sonos PlayBar, Sonos PlayBar wall mount, Sonos Subwoofer, Loudspeakers Sonance VP52R Ultra T',
+        'MAIN SALOON TV 65’’ LG Led Smart Tv, Apple Tv 4K 64Gb, Sonos Amp, Sonos PlayBar, Sonos PlayBar wall mount, Sonos Subwoofer, Loudspeakers Sonance VP52R Ultra Thi',
+        'EXTERNAL MAIN DECK – AFT COCKPIT Sonos Amp, Loudspeakers Sonance Extreme VPXT6R',
+        'UPPER SALOON TV 49’’ LG Led Smart Tv, Apple Tv 4K 64Gb, Sonos Amp, Sonos PlayBar, Sonos PlayBar wall mount, Sonos Subwoofer, Loudspeakers Sonance VP52R Ultra Th',
+        'EXTERNAL UPPER DECK – AFT COCKPIT Sonos Amp, Loudspeakers Sonance Extreme VPXT6R',
+        'CAPTAIN CABIN TV 24’’ LG Led, Digital/Analog Converter, Tuner CD/DVD Pioneer DHV340, Power supply Meanwell 220/12Vdc, Loudspeakers Sony SFB1320, Pair of grid (B',
+        'SUNDECK Sonos Amp, iPort Express for Sonos, Loudspeakers Sonance Extreme VPXT6R',
+        'EXTERNAL MAIN DECK BOW LIVING AREA • nr. 1 Sonos Amp, • nr. 4 Loudspeakers Sonance Extreme VPXT6R',
+        'BEACH AREA • nr. 1 Sonos Amp, • nr. 4 Loudspeakers Sonance Extreme VPXT6R',
+        'Main rack installation',
+        'Sub racks installation',
+        'Internet connection > STANDARD config. : NETWORK • nr. 1 Router PepLink MAX-BR1-MK2-LTEA-W, • nr. 1 PepLink Balance 20, • nr. 8 Access Point AP One Enterprise, ',
+        'OPT > Audio Video upgrade to "Platinum" Package',
+        'Internal Wifi access point connectivity',
+        'Hot spot antenna',
+        'OPT > Starlink maritime predisposition',
+        'Audio system (interior/exterior)',
+        'Video system (interior/exterior)',
+        'UPS: check the functionality during the blackout',
+      ]},
+      { name:'Extractors: head and technical areas', items:[
+        'STD config, extraction system will be installed to serve: • bathrooms. • service and emergency battery boxes, • bilge, • galley hood, • garage"',
+        'Electric Curtains on the main deck STD',
+        'standard appliances here below:',
+        'Crew mess > WASHER MACHINE + DRYER MACHINE + MINI FRIDGE',
+        'Main Saloon > MINI FRIDGE + ICE MAKER',
+        'GALLEY > COOKING TOP 90cm + EXHAUST HOOD + OVEN 90cm + MICROWAVE + DISHWASHER + FRIDGE/FREEZER',
+        'OPT > Built-in coffee machine in galley',
+        'PANTRY U.D. > SMALL MICROWAVE + MINI FRIDGE + ICE MAKER',
+        'UPPER SALOON > MINI FRIDGE',
+        'BEACH AREA BAR > ICE MAKER + MINI FRIDGE',
+        'SUN DECK BAR > ICE MAKER + MINI FRIDGE',
+        'OPT> Sundeck bar cabinet as per trideck-14 in lieu of the std one equipped with the following: - teppaniaki; -n.2 fridges; -n.1 icemaker; -n.1 sink.',
+        'OPT>Professional appliances(washing machine and dryer)',
+        'OPT > N.1 professional washer and n.1 professional dryer in lieu of the std full height fridge in MD galley',
+        'OPT> UPPER DECK> PANTRY>Wine cooler',
+        'OPT>MASTER CABIN>Fridge',
+        'OPT> LOBBY> FRIDGE',
+        'OPT> CREW MESS>Microwave and fridge',
+        'OPT> Barbecue on the stbd UD cabinet',
+      ]},
+      { name:'Dumbwaiter', items:[
+        'Visual check of all components and their proper installation on board',
+        'Emergency stop',
+        'Check the door cannot be opened if not in local (ex: if the station in command is the MD then UD door cannot be opened)',
+        'Sensors disabled functions',
+        'Manual lift if any (emergency procedure)',
+        'OPT > Dimmers for exterior lights (hardtop included) and internal lights (wheelhouse navigation lights and onix stairs), switches with led on-off',
+        'INT',
+        'OPT > Additional USB type A and C plugs (Position and number to be discussed)',
+        'EXT',
+        'OPT > Additional socket',
+        'Engine room',
+      ]},
+      { name:'Vacuum cleaner', items:[
+        'sliding doors STD > : main deck (electric) and Upper deck',
+        'Visual check of all components and their proper installation on board',
+        'OPT > Automatic electric door in the salon (upper deck)',
+        'Check all options on the dedicated display / panel',
+        'Accessibility to the batteries',
+        'Accessibility to the junction box where is installed the fuse (if any)',
+      ]},
+      { name:'Awnings and poles,bimini,electric roofs', items:[
+        'OPT > Sundeck Tent with 2 carbon fiber poles',
+        'OPT > Bow area tent with 6 carbon fiber poles',
+        'OPT > Aft raised terrace tent with 4 carbon poles',
+        'n.1 manual swimming ladder in AISI 316L stainless steel, with teak steps',
+      ]},
+      { name:'FURNITURE accessories', items:[
+        'OPT> Additional Safe (please specify position)',
+        'MASTER CABIN SAFE 1 STD',
+        'CAPTAIN’S CABIN SAFE 1 STD',
+      ]},
+      { name:'MISCELLANEOUS (standard)', items:[
+        'Nr. 3 mooring lines, each one 70 m, black colour, diam. 30 mm, 3 strands, polyester, eye-splice leather coated at one end, as per rules, will be supplied',
+        'Two boat hooks',
+        'Eight white fenders type F7, with polyester lines length 4 m, black colour, diam. 14 mm',
+        'PROTECTIVE FABRIC COVERS Covers for flybridge and upper deck: tables, sofas, bar, stools, and sunbathing cushions. Covers for main deck aft and forward cockpit:',
+        'The transom name will be made in 3 mm polished stainless steel letters, without back lighting.',
+      ]},
+      { name:'FIRE & SAFETY APPLIANCES STANDARD', items:[
+        'One fireman axe',
+        'Two life rafts for ten people each',
+        '2 LIFE BUOYS , with buoyant line',
+        'Parachute flares (6 pieces) and smoke signals (6 pieces)',
+        'Nr. 16 life jackets',
+      ]},
+      { name:'Loose forniture std', items:[
+        'Internal',
+        'CREW MESS: DINING TABLE 1 AZIMUT SELECTION SOFA 3 SEATS 1 AZIMUT SELECTION POUFF 1 AZIMUT SELECTION',
+        'MAIN SALOON: SOFA 8 SEATS 1 AZIMUT SELECTION  ARMCHAIRS 2 AZIMUT SELECTION COFFE TABLE 2 AZIMUT SELECTION',
+        'OWNER’S CABIN: LOW TABLE 1 AZIMUT SELECTION SMALL ARMCHAIR 2 AZIMUT SELECTION',
+        'OPT> MASTER CABIN>N.1 armchair and n.1 pouff (model to be defined) on portside',
+        'SKY LOUNGE: SOFA 7 SEATS 1 AZIMUT SELECTION COFFEE TABLE CONVERTIBLE IN DINING 1 AZIMUT SELECTION',
+        'EXTERNAL',
+        'OPT > Salvagni beach area layout (2 sofas, 1 coffee table and teak bulkhead)',
+        'MAIN DECK>COCKPIT AREA: COFFEE TABLE 2 AZIMUT SELECTION',
+        'OPT > Dining Version on the main deck cockpit',
+        'OPT > Aft Terrace C-Shape Sofa and coffee table',
+        'MAIN DECK> BOW LIVING AREA: SUN PAD AROUND JACUZZI 2 AZIMUT SELECTION SUN PAD on forward 1 AZIMUT SELECTION',
+        'OPT > Extendable exterior dining table on the upper deck',
+        'UPPER DECK >EXTERNAL AFT AREA: DINING TABLE FOR 10 PEOPLE 1 AZIMUT SELECTION DINING CHAIRS 10 AZIMUT SELECTION',
+        'OPT > L shaped sofa on aft upper deck',
+        'SUN DECK>EXTERNAL AREA: Hi-lo DINING TABLE FOR 10 PEOPLE 1 AZIMUT SELECTION SOFA 5 SEATS 2 AZIMUT SELECTION BAR STOOLS 3 AZIMUT SELECTION',
+        'OPT> SUNDECK> N.5 stools same design of the std ones with high low manual mechanism in lieu of the n.3 std stools',
+      ]},
+      { name:'OPT > Owner  request', items:[
+        'OPT > Additional soundproofing insulation on the following bulkheads: between VIP cabins and engine room, between Lower Deck Guest cabins and crew area, between',
+        'OPT > Teak Flooring on sun deck and upper deck',
+        'OPT> Starboard Guest cabin with French Bed',
+        'OPT>Helmsman seat, Aras Indoor, electric high-low mechanism',
+        'OPT > Additional storage for toys (full height lockers) in the beach area',
+        'OPT> Barbecue on the stbd UD cabinet',
+        'OPT > Marquipt ladder',
+        'OPT > Salon layout in lieu of the std as follows: - aft lounge area with L custom shaped sofa (same design of the std one) on portside, std coffee table and n. ',
+        'OPT > bar cabinet at entrance port side midified as follow: NO icemaker, NO sink, 1 wine cooler, 1 cigar cellar',
+        'OPT > Portside round window frame shapes in the UD lounge to be replaced by rectangle shaped ones as per proposal shown during the meeting held in Viareggio on ',
+        'OPT> MASTER CABIN> Nightstands drawers dark wook in lieu of alpacca std',
+        'OPT> MASTER CABIN>Additional cabinet on the aft bulkhead portside as per trideck-20',
+        'OPT> MASTER CABIN>Vanity as per 32-31, but loger and with a set of drawers on the right + n.1 chair to be installed on starboard side in lieu of the std coffee ',
+        'OPT> MASTER CABIN>Mirror with integrated led light, same design of the one installed in the trideck-21 above the vanity in the master\'s head',
+      ]},
+    ]
+  },
+  's13_sea': {
+    label: 'Sea trial',
+    sections: [
+      { name:'General', items:[
+        'STD > electrical bow thruster (CMC BTM75EA) will be installed with an electrical motor having 65 kW',
+        'OPT>Electric stern thruster (requires upgraded generators included in the price)',
+        'Stbd bow',
+        'Port bow',
+        'Stbd stern',
+        'Port stern',
+        'Bow & stern',
+      ]},
+      { name:'Snap photos of the tanks status and check the correct value at differn', items:[
+        'MTU16V2000M96, of 1790 kW (2400 BHP) @ 2450 rpm each, with Blue Vision NG Basic electronics',
+        'Check tachometers all stations',
+      ]},
+      { name:'Steering tests (in case of two pumps, both to be tested)', items:[
+        'Turning circles both hard to port and stbd with stabilizers (cruising speed; about 75% engine load): Snap pictures of the stabilizer control panel',
+        'Turning circles both port and stbd side without stabilizers (economical speed; about 40% engine load): Snap pictures of the stabilizer control panel',
+        'S-turns at cruising speed: Snap pictures of the stabilizer control panel',
+      ]},
+      { name:'Black out to verify:', items:[
+        'MM/EE still ON',
+        'Engine room ventilation ON',
+        'Fire damper engine room OPEN',
+        'emergency steering system',
+        'wheelhouse devices under emergency batteries',
+      ]},
+      { name:'Emergency steering system (should be checked in black out condition)', items:[
+        'Remote (wheelhouse)',
+        'Local; check INTERCOM',
+        'Manoeuvering wing stations, engine and thruster control STD',
+      ]},
+      { name:'Engine Room ventilation check', items:[
+        'Pressure check in the engine room (refer to the engine door)',
+      ]},
+      { name:'Stabilizers', items:[
+        'OPT> Integrated autopilotsystem with stabilizers',
+        'Standard> Nr. 2 electrical stabilizer fins (CMC Stabilis Electra SE80) working underway and at anchor will be installed.',
+        'Navigation mode',
+        'Adaptive mode',
+        'Anchor mode: check fin at center when the throttle are FWD and REV',
+        'Flip mode (if available when at anchor)',
+        'MSS mode (if available when at anchor)',
+      ]},
+      { name:'Anchoring Tests (both anchors)', items:[
+        'STD Two electric foot-operated vertical capstans will be fitted on aft deck, Electric power will be 400 Vac, 3 phases, 50Hz, 4 kW.',
+        'Check the shackles paint status',
+      ]},
+      { name:'Navigation electronics tests', items:[
+        'OPT> Electronic and navigation upgrade to “Platinum” Package',
+        'OPT> Integrated autopilotsystem with stabilizers',
+        'Gyrocompass (mother)',
+        'Magnetic compass',
+        'AUTOPILOT: check override with the wheel',
+        'TILLER',
+        'Radar X band',
+        'Radar S band',
+        'OPT>AIS- class B',
+        'Log',
+        'Echosounder',
+        'Sonar',
+        'Chart plotter: STD > nr. 2 Display Simrad NSO EVO3 16”, check radar overlay and radar targets overlay; check the SD card reader',
+        'Track mode creating a route',
+        'BNWAS (bridge navigational watch alarm system)',
+        'SSAS (ship security alert system)',
+      ]},
+      { name:'Communications tests (should be checked in black out condition)', items:[
+        'VHF all stations',
+        'DSC VHF all stations',
+        'MF all stations',
+        'DSC MF all stations',
+        'SART (set X band Radar on 12 nm range)',
+      ]},
+      { name:'Sewage treatment system (Hamann)', items:[
+        'STD Nr. 1 reverse osmosis watermaker (Idromar MC9S) will be fitted.',
+        'OPT>Two separate water makers with total capacity up to 360 lt',
+      ]},
+    ]
+  },
+  's7_sub': {
+    label: 'Pre launch (submerged parts)',
+    sections: [
+      { name:'Continuity test', items:[
+        'All the machinery, electrical motors, equipment, electric panels will be connected to the electric earth and this one to the ground plate. A lightning conductor',
+        'Check continuity with the bomding circuit all over he boat',
+      ]},
+      { name:'Anti-fouling paint', items:[
+        'Anti-fouling paint application all over the hull',
+      ]},
+      { name:'Main zincs', items:[
+        'Zincs installation',
+        'Contact with water',
+        'Continuity',
+      ]},
+      { name:'Porous plates', items:[
+        'Check no Sika in the bolts',
+        'Check no paint above the plates',
+        'Check every single plate',
+        'If no continuity be sure they are for lightning rod and electronic',
+      ]},
+      { name:'Underwater lights', items:[
+        'Underwater lights installation',
+        'Anti-fouling coverage',
+      ]},
+      { name:'Thru-hull fittings', items:[
+        'Thru-hull fittings installation',
+        'Anti-fouling coverage',
+      ]},
+      { name:'Fixed intruder blade', items:[
+        'Intruder blade installation',
+        'Antifouling coverage',
+      ]},
+      { name:'Active trim system', items:[
+        'Trim system installation',
+        'Trim system operation',
+        'Anti-fouling coverage',
+      ]},
+      { name:'Stern Thruster', items:[
+        'Propellers installation',
+        'Propellers surface',
+        'Zincs and grid installation',
+        'Anti-fouling on tunnel surface',
+      ]},
+      { name:'Rudders', items:[
+        'Rudder installation (port and stbd)',
+        'Zinc installed and well bolted (port and stbd)',
+        'Anti-fouling coverage',
+        'Check correct alignment with the reference structure',
+        'five-blade propellers in nickel-aluminium-bronze. surface finishing will comply to ISO S class',
+        'Propeller installation (port and stbd)',
+        'Propeller surfaces (port and stbd)',
+        'Zinc installation (port and stbd)',
+      ]},
+      { name:'P-Brackets', items:[
+        'P-Bracket installation (port and stbd)',
+        'Anti-fouling coverage',
+      ]},
+      { name:'Shafts', items:[
+        'Shafts installation (port and stbd)',
+        'Shafts surfaces (port and stbd)',
+        'OPT> Fins Stabilization Upgrade from 1,85 sqm to 2 sqm Fins',
+        'STD Nr. 2 electrical stabilizer fins (CMC Stabilis Electra SE80) working underway and at anchor will be installed.',
+        'Stabilizers fins installation (port and stbd)',
+        'Anti-fouling coverage (port and stbd)',
+        'Winglets installation (port and stbd)',
+        'Winglets anti-fouling coverage(port and stbd)',
+      ]},
+      { name:'Sea water ntakes', items:[
+        'Grates installation',
+        'Anti-fouling coverage',
+        'Zincs installation (if required)',
+        'std',
+        'Echo Sounder Transducer  installation',
+        'Anti-fouling coverage (no antifouling on the transducer)',
+        'Speed log installation',
+      ]},
+      { name:'Engine exhausts', items:[
+        'Exhaust scoops construction (port and stbd)',
+        'Anti-fouling external coverage(port and stbd)',
+        'Anti-fouling internal coverage (port and stbd)',
+        'By-pass exhaust installation (port and stbd)',
+      ]},
+      { name:'Bow Thruster', items:[
+        'Propellers installation',
+        'Propellers surface',
+        'Zincs installation & continuity',
+        'Anti-fouling coverage on tunnel surface',
+      ]},
+      { name:'Wave piercer', items:[
+        'Strakes installation',
+        'Bow inox (ss) protection, Stainless steel profiles will be fitted on the “wave piercer” bow as protection from anchors’ chains.  STD',
+        'Anti-fouling coverage',
+      ]},
+    ]
+  },
+  's7_above': {
+    label: 'Pre launch above water line',
+    sections: [
+      { name:'Paint', items:[
+        'Hull',
+        'Superstructure',
+        'Boot stripe',
+      ]},
+      { name:'Clam shell vents & drains (above water line)', items:[
+        'Clam shell vents & drains installation',
+        'STD > 2 galvanised steel HHP (very high holding power) anchors of 200 kg each.   nr. 2 studless chains made in galvanised steel of 16 mm diameter link, length o',
+        'Anchor (port and stbd)',
+        'Chain ( port and stbd )',
+        'Chain marks',
+        'Anchor plate installation (port and stbd)',
+      ]},
+      { name:'Rub rails port and stbd', items:[
+        'Check correct installation of the inox plates',
+        'Check uniform gap between plates and teflon/structure',
+        'Check (possible) grills installation',
+      ]},
+      { name:'Sponson port and stbd', items:[
+        'Check correct installation of the inox plates',
+        'Check uniform gap between plates and teflon/structure',
+        'Check (possible) grills installation',
+      ]},
+      { name:'Mooring equipment', items:[
+        'Bow fairleads installation',
+        'Stern fairlead installation',
+        'Fairleads chafe bars (aft,fwd,cn)',
+      ]},
+      { name:'Fall protection - Access Rail system', items:[
+        'Tracks installation',
+        'Verify easy accessibility for crew',
+        'Verify no damages will occur on the paint when the rope is working',
+      ]},
+      { name:'Transom/Garage/owner balcony/balconies (port and stbd)', items:[
+        'Installation flush with surrounding hull surfaces and uniform gap',
+        'Uniform gap',
+      ]},
+      { name:'Logos / Transom name', items:[
+        'Roll bar area',
+        'Fashion plates',
+      ]},
+      { name:'Windows', items:[
+        'Glass surfaces',
+        'Sealant application',
+      ]},
+      { name:'Decorative glass panels', items:[
+        'Glass surfaces',
+        'Correct installation',
+      ]},
+      { name:'Water-tightness test', items:[
+        'Portholes',
+        'All the hull doors',
+      ]},
+    ]
+  },
+};
+
+
+
+
+
 // ═══ DATA ═══════════════════════════════════════════════════════
 var surveys=JSON.parse(localStorage.getItem('ms_sv')||'[]');
 var current=null,curSec=0;
@@ -247,71 +981,62 @@ var STATUS=['','OK','NOT OK','N/A','NOT TESTED'];
 // cat: 'full' | 'light' | 'space' | 'surface'
 // group: section they belong to
 var DB=[
-  // ── Spaces / Rooms ─────────────────────────────────────────
-  {id:'owner',   name:'Owner Suite',            cat:'space',  group:'acc',  fields:[]},
-  {id:'mstvip',  name:'Master VIP Cabin',        cat:'space',  group:'acc',  fields:[]},
-  {id:'vip-p',   name:'VIP Cabin Port',          cat:'space',  group:'acc',  fields:[]},
-  {id:'vip-s',   name:'VIP Cabin Stbd',          cat:'space',  group:'acc',  fields:[]},
-  {id:'gst-fp',  name:'Guest Cabin Fwd Port',    cat:'space',  group:'acc',  fields:[]},
-  {id:'gst-fs',  name:'Guest Cabin Fwd Stbd',    cat:'space',  group:'acc',  fields:[]},
-  {id:'gst-ap',  name:'Guest Cabin Aft Port',    cat:'space',  group:'acc',  fields:[]},
-  {id:'gst-as',  name:'Guest Cabin Aft Stbd',    cat:'space',  group:'acc',  fields:[]},
-  {id:'crew1',   name:'Crew Cabin 1',            cat:'space',  group:'acc',  fields:[]},
-  {id:'crew2',   name:'Crew Cabin 2',            cat:'space',  group:'acc',  fields:[]},
-  {id:'crew3',   name:'Crew Cabin 3',            cat:'space',  group:'acc',  fields:[]},
-  {id:'md-sal',  name:'Main Deck Saloon',        cat:'space',  group:'acc',  fields:[]},
-  {id:'ud-sal',  name:'Upper Deck Saloon',       cat:'space',  group:'acc',  fields:[]},
-  {id:'ud-din',  name:'Upper Deck Dining',       cat:'space',  group:'acc',  fields:[]},
-  {id:'galley',  name:'Galley',                  cat:'space',  group:'acc',  fields:[]},
-  {id:'wheelh',  name:'Wheelhouse',              cat:'space',  group:'acc',  fields:[]},
-  {id:'flybrg',  name:'Flybridge',               cat:'space',  group:'acc',  fields:[]},
-  {id:'sundeck', name:'Sun Deck',                cat:'space',  group:'acc',  fields:[]},
-  {id:'beach',   name:'Beach Club / Platform',   cat:'space',  group:'acc',  fields:[]},
-  {id:'garage',  name:'Garage',                  cat:'space',  group:'acc',  fields:[]},
-  {id:'crewmss', name:'Crew Mess',               cat:'space',  group:'acc',  fields:[]},
-  // ── Main engines ───────────────────────────────────────────
-  {id:'mtu16v',  name:'MTU 16V2000 M96L',        cat:'full',   group:'prop', fields:['Serial No. Port','Serial No. Stbd','Hours Port','Hours Stbd','Last Service']},
-  {id:'mtu12v',  name:'MTU 12V2000 M96L',        cat:'full',   group:'prop', fields:['Serial No. Port','Serial No. Stbd','Hours Port','Hours Stbd','Last Service']},
-  {id:'mtu8v',   name:'MTU 8V2000 M96L',         cat:'full',   group:'prop', fields:['Serial No. Port','Serial No. Stbd','Hours Port','Hours Stbd','Last Service']},
-  {id:'man2842', name:'MAN D2842 LE406',          cat:'full',   group:'prop', fields:['Serial No. Port','Serial No. Stbd','Hours Port','Hours Stbd','Last Service']},
-  {id:'man2868', name:'MAN D2868 LE',             cat:'full',   group:'prop', fields:['Serial No. Port','Serial No. Stbd','Hours Port','Hours Stbd']},
-  {id:'cat-c18', name:'CAT C18 ACERT',            cat:'full',   group:'prop', fields:['Serial No. Port','Serial No. Stbd','Hours Port','Hours Stbd','Last Service']},
-  {id:'cat-c32', name:'CAT C32 ACERT',            cat:'full',   group:'prop', fields:['Serial No. Port','Serial No. Stbd','Hours Port','Hours Stbd','Last Service']},
-  {id:'volvo-ips',name:'Volvo Penta IPS',         cat:'full',   group:'prop', fields:['S/N Port','S/N Stbd','Hours Port','Hours Stbd']},
-  {id:'scania',  name:'Scania DI16',              cat:'full',   group:'prop', fields:['S/N Port','S/N Stbd','Hours Port','Hours Stbd','Last Service']},
-  // ── Gearboxes ──────────────────────────────────────────────
-  {id:'zf-3370', name:'ZF 3370',                  cat:'light',  group:'prop', fields:['Ratio','S/N Port','S/N Stbd']},
-  {id:'zf-2050', name:'ZF 2050',                  cat:'light',  group:'prop', fields:['Ratio','S/N Port','S/N Stbd']},
-  {id:'vdrive',  name:'V-Drive Unit',             cat:'light',  group:'prop', fields:['Ratio']},
-  // ── Generators ─────────────────────────────────────────────
-  {id:'koh70',   name:'Kohler 70EFOZDJ',          cat:'full',   group:'gen',  fields:['Serial No. 1','Serial No. 2','Hours 1','Hours 2','Last Service']},
-  {id:'koh50',   name:'Kohler 50EKOZD',           cat:'full',   group:'gen',  fields:['Serial No.','Hours','Last Service']},
-  {id:'koh32',   name:'Kohler 32EKOZD',           cat:'full',   group:'gen',  fields:['Serial No.','Hours','Last Service']},
-  {id:'koh20',   name:'Kohler 20EFKOZD',          cat:'full',   group:'gen',  fields:['Serial No.','Hours','Last Service']},
-  {id:'onan-dkm',name:'Onan DKMD / DKMC',        cat:'full',   group:'gen',  fields:['Serial No.','Hours','Last Service']},
-  {id:'nrthlts', name:'Northern Lights',          cat:'full',   group:'gen',  fields:['Serial No.','Hours','Last Service']},
-  // ── Stabilisers ────────────────────────────────────────────
-  {id:'qnt-zs',  name:'Quantum Zero-Speed Fins',  cat:'light',  group:'mach', fields:['Control Unit','Actuator Type','Last Service']},
-  {id:'qnt-uw',  name:'Quantum Underway Fins',    cat:'light',  group:'mach', fields:['Control Unit','Last Service']},
-  {id:'seakp',   name:'Seakeeper Gyro',           cat:'full',   group:'mach', fields:['Serial No.','Hours','Last Service']},
-  {id:'naiad',   name:'Naiad Stabiliser Fins',    cat:'light',  group:'mach', fields:['Control Unit']},
-  // ── AC & watermaker ────────────────────────────────────────
-  {id:'condaria',name:'Condaria Chiller',         cat:'full',   group:'mach', fields:['Refrigerant','Capacity (kBTU)','No. of Units']},
-  {id:'idromc',  name:'Idromar Watermaker',       cat:'full',   group:'mach', fields:['Capacity (l/h)','Hours']},
-  {id:'vico-wm', name:'Vico Watermaker',          cat:'full',   group:'mach', fields:['Capacity (l/h)','Hours']},
-  // ── Thrusters ──────────────────────────────────────────────
-  {id:'sp-bow',  name:'Side-Power Bow Thruster',  cat:'light',  group:'mach', fields:['Drive Type','Tunnel Diam.']},
-  {id:'sp-stn',  name:'Side-Power Stern Thruster',cat:'light',  group:'mach', fields:['Drive Type']},
-  {id:'slp-bow', name:'Sleipner Bow Thruster',    cat:'light',  group:'mach', fields:['Drive Type','Tunnel Diam.']},
-  {id:'qnt-bow', name:'Quantum Bow Thruster',     cat:'light',  group:'mach', fields:['Drive Type']},
-  // ── Shaft seals ────────────────────────────────────────────
-  {id:'microtem',name:'Microtem Shaft Seal',      cat:'light',  group:'mach', fields:['Shaft Diameter']},
-  {id:'tides-m', name:'Tides Marine Dripless',    cat:'light',  group:'mach', fields:['Shaft Diameter']},
-  // ── Hull surfaces ───────────────────────────────────────────
-  {id:'teak-dk', name:'Teak Deck',                cat:'surface',group:'hull', fields:['Caulking Condition','Last Renewal']},
-  {id:'gelcoat', name:'Gelcoat / Paint',          cat:'surface',group:'hull', fields:['Paint Type','Last Repaint']},
-  {id:'glazing', name:'Glazing',                  cat:'surface',group:'hull', fields:['Glass Type','Sealant Condition']},
-  {id:'af-paint',name:'Anti-fouling Paint',       cat:'surface',group:'hull', fields:['Paint Brand','Last Applied']},
+  {id:'owner',name:'Owner Suite',cat:'space',group:'acc',fields:[]},
+  {id:'mstvip',name:'Master VIP Cabin',cat:'space',group:'acc',fields:[]},
+  {id:'vip-p',name:'VIP Cabin Port',cat:'space',group:'acc',fields:[]},
+  {id:'vip-s',name:'VIP Cabin Stbd',cat:'space',group:'acc',fields:[]},
+  {id:'gst-fp',name:'Guest Cabin Fwd Port',cat:'space',group:'acc',fields:[]},
+  {id:'gst-fs',name:'Guest Cabin Fwd Stbd',cat:'space',group:'acc',fields:[]},
+  {id:'gst-ap',name:'Guest Cabin Aft Port',cat:'space',group:'acc',fields:[]},
+  {id:'gst-as',name:'Guest Cabin Aft Stbd',cat:'space',group:'acc',fields:[]},
+  {id:'crew1',name:'Crew Cabin 1',cat:'space',group:'acc',fields:[]},
+  {id:'crew2',name:'Crew Cabin 2',cat:'space',group:'acc',fields:[]},
+  {id:'crew3',name:'Crew Cabin 3',cat:'space',group:'acc',fields:[]},
+  {id:'md-sal',name:'Main Deck Saloon',cat:'space',group:'acc',fields:[]},
+  {id:'ud-sal',name:'Upper Deck Saloon',cat:'space',group:'acc',fields:[]},
+  {id:'ud-din',name:'Upper Deck Dining',cat:'space',group:'acc',fields:[]},
+  {id:'galley',name:'Galley',cat:'space',group:'acc',fields:[]},
+  {id:'wheelh',name:'Wheelhouse',cat:'space',group:'acc',fields:[]},
+  {id:'flybrg',name:'Flybridge',cat:'space',group:'acc',fields:[]},
+  {id:'sundeck',name:'Sun Deck',cat:'space',group:'acc',fields:[]},
+  {id:'beach',name:'Beach Club / Platform',cat:'space',group:'acc',fields:[]},
+  {id:'garage',name:'Garage',cat:'space',group:'acc',fields:[]},
+  {id:'crewmss',name:'Crew Mess',cat:'space',group:'acc',fields:[]},
+  {id:'mtu16v',name:'MTU 16V2000 M96L',cat:'full',group:'prop',fields:['Last Service']},
+  {id:'mtu12v',name:'MTU 12V2000 M96L',cat:'full',group:'prop',fields:['Last Service']},
+  {id:'mtu8v',name:'MTU 8V2000 M96L',cat:'full',group:'prop',fields:['Last Service']},
+  {id:'man2842',name:'MAN D2842 LE406',cat:'full',group:'prop',fields:['Last Service']},
+  {id:'man2868',name:'MAN D2868 LE',cat:'full',group:'prop',fields:['Last Service']},
+  {id:'cat-c18',name:'CAT C18 ACERT',cat:'full',group:'prop',fields:['Last Service']},
+  {id:'cat-c32',name:'CAT C32 ACERT',cat:'full',group:'prop',fields:['Last Service']},
+  {id:'volvo-ips',name:'Volvo Penta IPS',cat:'full',group:'prop',fields:['Last Service']},
+  {id:'scania',name:'Scania DI16',cat:'full',group:'prop',fields:['Last Service']},
+  {id:'zf-3370',name:'ZF 3370',cat:'light',group:'prop',fields:['Ratio']},
+  {id:'zf-2050',name:'ZF 2050',cat:'light',group:'prop',fields:['Ratio']},
+  {id:'vdrive',name:'V-Drive Unit',cat:'light',group:'prop',fields:['Ratio']},
+  {id:'koh70',name:'Kohler 70EFOZDJ',cat:'full',group:'gen',fields:['Last Service']},
+  {id:'koh50',name:'Kohler 50EKOZD',cat:'full',group:'gen',fields:['Last Service']},
+  {id:'koh32',name:'Kohler 32EKOZD',cat:'full',group:'gen',fields:['Last Service']},
+  {id:'koh20',name:'Kohler 20EFKOZD',cat:'full',group:'gen',fields:['Last Service']},
+  {id:'onan-dkm',name:'Onan DKMD / DKMC',cat:'full',group:'gen',fields:['Last Service']},
+  {id:'nrthlts',name:'Northern Lights',cat:'full',group:'gen',fields:['Last Service']},
+  {id:'qnt-zs',name:'Quantum Zero-Speed Fins',cat:'light',group:'mach',fields:['Control Unit','Actuator Type','Last Service']},
+  {id:'qnt-uw',name:'Quantum Underway Fins',cat:'light',group:'mach',fields:['Control Unit','Last Service']},
+  {id:'seakp',name:'Seakeeper Gyro',cat:'full',group:'mach',fields:['Last Service']},
+  {id:'naiad',name:'Naiad Stabiliser Fins',cat:'light',group:'mach',fields:['Control Unit']},
+  {id:'condaria',name:'Condaria Chiller',cat:'full',group:'mach',fields:['Refrigerant','Capacity (kBTU)','No. of Units']},
+  {id:'idromc',name:'Idromar Watermaker',cat:'full',group:'mach',fields:['Capacity (l/h)']},
+  {id:'vico-wm',name:'Vico Watermaker',cat:'full',group:'mach',fields:['Capacity (l/h)']},
+  {id:'sp-bow',name:'Side-Power Bow Thruster',cat:'light',group:'mach',fields:['Drive Type','Tunnel Diameter']},
+  {id:'sp-stn',name:'Side-Power Stern Thruster',cat:'light',group:'mach',fields:['Drive Type']},
+  {id:'slp-bow',name:'Sleipner Bow Thruster',cat:'light',group:'mach',fields:['Drive Type','Tunnel Diameter']},
+  {id:'qnt-bow',name:'Quantum Bow Thruster',cat:'light',group:'mach',fields:['Drive Type']},
+  {id:'microtem',name:'Microtem Shaft Seal',cat:'light',group:'mach',fields:['Shaft Diameter']},
+  {id:'tides-m',name:'Tides Marine Dripless',cat:'light',group:'mach',fields:['Shaft Diameter']},
+  {id:'teak-dk',name:'Teak Deck',cat:'surface',group:'hull',fields:['Caulking Condition','Last Renewal']},
+  {id:'gelcoat',name:'Gelcoat / Paint',cat:'surface',group:'hull',fields:['Paint Type','Last Repaint']},
+  {id:'glazing',name:'Glazing',cat:'surface',group:'hull',fields:['Glass Type','Sealant Condition']},
+  {id:'af-paint',name:'Anti-fouling Paint',cat:'surface',group:'hull',fields:['Paint Brand','Last Applied']}
 ];
 
 // ── Fixed structural sections (always available to include/exclude) ────────
@@ -328,6 +1053,11 @@ var FIXED=[
   {id:'s13',title:'13  Sea Trial',       short:'Sea Trial',  req:false},
   {id:'s14',title:'14  Machinery',       short:'Machinery',  req:false},
   {id:'s15',title:'15  Comments',        short:'Comments',   req:true},
+  {id:'ck1', title:'Checklist: Fire & Safety',   short:'Fire/Safety', req:false},
+  {id:'ck2', title:'Checklist: Hotel & Systems', short:'Hotel/Sys',   req:false},
+  {id:'ck3', title:'Checklist: Sea Trial',       short:'Sea Trial+',  req:false},
+  {id:'ck4', title:'Checklist: Pre-launch Sub.', short:'Pre-Launch↓', req:false},
+  {id:'ck5', title:'Checklist: Pre-launch Above',short:'Pre-Launch↑', req:false},
 ];
 
 // ── Suggested presets ─────────────────────────────────────────────────────
@@ -388,121 +1118,191 @@ function badge(cat){
 }
 
 
-// ─── LIVE DATABASE (extends built-in DB with user additions) ──────────────
-var userDB = JSON.parse(localStorage.getItem('ms_userdb') || '[]');
-function getFullDB(){ return DB.concat(userDB); }
-function saveUserDB(){ localStorage.setItem('ms_userdb', JSON.stringify(userDB)); }
-
+// ─── DATABASE MANAGEMENT ────────────────────────────────────────────────────
+// userDB    = user-added items (localStorage)
+// hiddenIDs = IDs of built-in items hidden/deleted by user (localStorage)
+var userDB    = JSON.parse(localStorage.getItem('ms_userdb')  || '[]');
+var hiddenIDs = JSON.parse(localStorage.getItem('ms_hiddendb')|| '[]');
 var dbFilterActive = 'all';
+var editingId = null;
+
+function getFullDB(){
+  var visible = DB.filter(function(d){ return hiddenIDs.indexOf(d.id) < 0; });
+  return visible.concat(userDB);
+}
+function saveUserDB(){ localStorage.setItem('ms_userdb',  JSON.stringify(userDB));  }
+function saveHidden(){ localStorage.setItem('ms_hiddendb',JSON.stringify(hiddenIDs));}
 
 function showDB(){
-  // Save survey state if editing
   if(!document.getElementById('s-edit').classList.contains('h')) snap();
   ['s-home','s-info','s-chk','s-edit','s-expo'].forEach(hide);
   show('s-db');
   hide('prog');hide('snav');hide('abar');hide('bexp');
-  show('bbk');show('bsav');hide('bdb');
-  hide('bsav'); // no save needed on DB screen
+  var bdb=document.getElementById('bdb');if(bdb)hide('bdb');
+  show('bbk');hide('bsav');
   setTitle('Component Database');
+  editingId=null;
   renderDbList();
 }
 
-function filterDB(grp, btn){
-  dbFilterActive = grp;
+function filterDB(grp,btn){
+  dbFilterActive=grp; editingId=null;
   document.querySelectorAll('#s-db .chip').forEach(function(c){c.classList.remove('act')});
   btn.classList.add('act');
   renderDbList();
 }
 
 function renderDbList(){
-  var all = getFullDB();
-  var items = dbFilterActive === 'all' ? all : all.filter(function(d){return d.group === dbFilterActive});
-  var grpLabel = {acc:'Accommodation',prop:'Propulsion',gen:'Generators',mach:'Machinery',hull:'Hull'};
-  var typeLabel = {full:'Full',light:'Light',space:'Space',surface:'Surface'};
-  var typeColor = {full:'cb-full',light:'cb-light',space:'cb-space',surface:'cb-surf'};
+  var all   = getFullDB();
+  var items = dbFilterActive==='all'?all:all.filter(function(d){return d.group===dbFilterActive});
+  var GL = {acc:'Accommodation',prop:'Propulsion',gen:'Generators',mach:'Machinery',hull:'Hull'};
+  var TL = {full:'Full',light:'Light',space:'Space',surface:'Surface'};
+  var TC = {full:'cb-full',light:'cb-light',space:'cb-space',surface:'cb-surf'};
 
   if(!items.length){
-    document.getElementById('db-list').innerHTML = '<p style="color:var(--t2);font-size:13px">No items in this group.</p>';
+    document.getElementById('db-list').innerHTML='<p style="color:var(--t2);font-size:13px">No items.</p>';
     return;
   }
+
+  var catOpts = [
+    {v:'full',    l:'Full \u2013 serial+hours (engines, gensets)'},
+    {v:'light',   l:'Light \u2013 brand+model (gearboxes, thrusters)'},
+    {v:'space',   l:'Space / Cabin / Room'},
+    {v:'surface', l:'Surface / Structure'}
+  ].map(function(o){return '<option value="'+o.v+'">'+o.l+'</option>';}).join('');
+
+  var grpOpts = [
+    {v:'acc',  l:'Accommodation'},
+    {v:'prop', l:'Propulsion'},
+    {v:'gen',  l:'Generators'},
+    {v:'mach', l:'Machinery'},
+    {v:'hull', l:'Hull'}
+  ].map(function(o){return '<option value="'+o.v+'">'+o.l+'</option>';}).join('');
+
   var html = items.map(function(item){
-    var isUser = userDB.some(function(u){return u.id === item.id});
-    var fields = item.fields && item.fields.length ? item.fields.join(', ') : 'no extra fields';
-    return '<div class="db-item">' +
+    var isBuiltin = DB.some(function(d){return d.id===item.id});
+    var fields = item.fields&&item.fields.length?item.fields.join(', '):'';
+
+    if(editingId===item.id){
+      return '<div style="background:#F0F6FF;border:1.5px solid var(--bl);border-radius:8px;padding:12px;margin-bottom:8px" id="dbedit-'+item.id+'">' +
+        '<div style="font-size:11px;font-weight:700;color:var(--bl);text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px">Editing: '+esc(item.name)+'</div>' +
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">' +
+          '<div class="fr" style="margin:0"><label>Name</label><input id="edit-name" type="text" value="'+esc(item.name)+'"></div>' +
+          '<div class="fr" style="margin:0"><label>Type</label><select id="edit-cat">'+catOpts+'</select></div>' +
+        '</div>' +
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">' +
+          '<div class="fr" style="margin:0"><label>Group</label><select id="edit-grp">'+grpOpts+'</select></div>' +
+          '<div class="fr" style="margin:0"><label>Extra fields (comma separated)</label><input id="edit-fields" type="text" value="'+esc(fields)+'" placeholder="Serial No., Hours..."></div>' +
+        '</div>' +
+        '<div style="display:flex;gap:8px">' +
+          '<button class="btn btnp" style="flex:none;padding:8px 18px" onclick="saveEdit(\''+item.id+'\')">Save</button>' +
+          '<button class="btn" style="flex:none;padding:8px 14px" onclick="cancelEdit()">Cancel</button>' +
+        '</div>' +
+      '</div>';
+    }
+
+    return '<div class="db-item" id="dbrow-'+item.id+'">' +
       '<div class="db-item-info">' +
-        '<div class="db-item-name">' + esc(item.name) + '</div>' +
-        '<div class="db-item-meta">' + (grpLabel[item.group]||item.group) + ' &bull; ' + fields + '</div>' +
+        '<div class="db-item-name">'+esc(item.name)+(isBuiltin?'':' <span style="font-size:10px;color:var(--gn)">\u2605 custom</span>')+'</div>' +
+        '<div class="db-item-meta">'+(GL[item.group]||item.group)+(fields?' \u00b7 '+fields:'')+'</div>' +
       '</div>' +
-      '<span class="cbadge ' + (typeColor[item.cat]||'cb-surf') + '">' + (typeLabel[item.cat]||item.cat) + '</span>' +
-      (isUser ? '<button class="db-del" onclick="delDbItem(\''+item.id+'\''+')" title="Delete">&times;</button>' :
-                '<span style="font-size:11px;color:var(--t3);padding:0 6px">built-in</span>') +
+      '<span class="cbadge '+(TC[item.cat]||'cb-surf')+'">'+(TL[item.cat]||item.cat)+'</span>' +
+      '<button onclick="startEdit(\''+item.id+'\')" title="Edit" style="background:none;border:1px solid var(--br);border-radius:6px;padding:3px 8px;font-size:14px;cursor:pointer;margin-left:6px;color:var(--bl)">\u270e</button>' +
+      '<button onclick="deleteDbItem(\''+item.id+'\')" title="Delete" style="background:none;border:none;color:var(--rd);font-size:22px;cursor:pointer;padding:0 4px;line-height:1;margin-left:2px">\u00d7</button>' +
     '</div>';
   }).join('');
-  document.getElementById('db-list').innerHTML = html;
+
+  if(hiddenIDs.length){
+    html+='<div style="margin-top:12px;padding:10px 14px;background:var(--aml);border-radius:8px;font-size:13px;display:flex;justify-content:space-between;align-items:center">' +
+      '<span>'+hiddenIDs.length+' built-in item'+(hiddenIDs.length>1?'s':'')+' hidden</span>' +
+      '<button class="btn" style="flex:none;width:auto;padding:6px 14px;font-size:12px" onclick="restoreBuiltins()">Restore all</button>' +
+    '</div>';
+  }
+
+  document.getElementById('db-list').innerHTML=html;
+
+  if(editingId){
+    var it=getFullDB().find(function(d){return d.id===editingId});
+    if(it){
+      var sc=document.getElementById('edit-cat');
+      var sg=document.getElementById('edit-grp');
+      if(sc)sc.value=it.cat;
+      if(sg)sg.value=it.group;
+    }
+  }
+}
+
+function startEdit(id){ editingId=id; renderDbList(); var el=document.getElementById('dbedit-'+id); if(el)el.scrollIntoView({behavior:'smooth',block:'nearest'}); }
+function cancelEdit(){ editingId=null; renderDbList(); }
+
+function saveEdit(id){
+  var name   = document.getElementById('edit-name').value.trim();
+  var cat    = document.getElementById('edit-cat').value;
+  var grp    = document.getElementById('edit-grp').value;
+  var fields = document.getElementById('edit-fields').value.split(',').map(function(f){return f.trim()}).filter(Boolean);
+  if(!name){toast('Name required');return;}
+  var isBuiltin=DB.some(function(d){return d.id===id});
+  if(isBuiltin){
+    if(hiddenIDs.indexOf(id)<0) hiddenIDs.push(id);
+    saveHidden();
+    userDB=userDB.filter(function(u){return u.id!=='ovr-'+id});
+    userDB.push({id:'ovr-'+id,name:name,cat:cat,group:grp,fields:fields});
+  } else {
+    var u=userDB.find(function(u){return u.id===id});
+    if(u){u.name=name;u.cat=cat;u.group=grp;u.fields=fields;}
+  }
+  saveUserDB(); editingId=null; renderDbList(); toast('Saved \u2713');
 }
 
 function addDbItem(){
-  var name = document.getElementById('dbi-n').value.trim();
-  if(!name){ toast('Enter item name'); return; }
-  var fields = document.getElementById('dbi-f').value.split(',').map(function(f){return f.trim()}).filter(Boolean);
-  var item = {
-    id: 'u-' + uid(),
-    name: name,
-    cat: document.getElementById('dbi-c').value,
-    group: document.getElementById('dbi-g').value,
-    fields: fields
-  };
-  userDB.push(item);
+  var name=document.getElementById('dbi-n').value.trim();
+  if(!name){toast('Enter item name');return;}
+  var fields=document.getElementById('dbi-f').value.split(',').map(function(f){return f.trim()}).filter(Boolean);
+  userDB.push({id:'u-'+uid(),name:name,cat:document.getElementById('dbi-c').value,group:document.getElementById('dbi-g').value,fields:fields});
   saveUserDB();
-  document.getElementById('dbi-n').value = '';
-  document.getElementById('dbi-f').value = '';
-  renderDbList();
-  toast(name + ' added ✓');
+  document.getElementById('dbi-n').value='';document.getElementById('dbi-f').value='';
+  renderDbList(); toast('Added \u2713');
 }
 
-function delDbItem(id){
-  var item = userDB.find(function(u){return u.id === id});
-  if(!item) return;
-  if(!confirm('Remove "' + item.name + '"?')) return;
-  userDB = userDB.filter(function(u){return u.id !== id});
-  saveUserDB();
-  renderDbList();
-  toast('Removed');
+function deleteDbItem(id){
+  var item=getFullDB().find(function(d){return d.id===id});
+  if(!item)return;
+  if(!confirm('Remove "'+item.name+'"?\n\nBuilt-in items can be restored later.'))return;
+  var isBuiltin=DB.some(function(d){return d.id===id});
+  if(isBuiltin){ if(hiddenIDs.indexOf(id)<0)hiddenIDs.push(id); saveHidden(); }
+  else { userDB=userDB.filter(function(u){return u.id!==id}); saveUserDB(); }
+  editingId=null; renderDbList(); toast('Removed');
+}
+
+function restoreBuiltins(){
+  if(!confirm('Restore all hidden built-in items?'))return;
+  hiddenIDs=[]; saveHidden(); renderDbList(); toast('Restored \u2713');
 }
 
 function exportDB(){
-  var all = getFullDB();
-  var b = new Blob([JSON.stringify(all, null, 2)], {type:'application/json'});
-  var u = URL.createObjectURL(b);
-  var a = document.createElement('a');
-  a.href = u; a.download = 'MarineSurvey_Database.json';
-  a.click(); URL.revokeObjectURL(u);
-  toast('Database exported ✓');
+  var b=new Blob([JSON.stringify(getFullDB(),null,2)],{type:'application/json'});
+  var u=URL.createObjectURL(b); var a=document.createElement('a');
+  a.href=u; a.download='MarineSurvey_Database.json'; a.click(); URL.revokeObjectURL(u);
+  toast('Database exported \u2713');
 }
-
 function importDB(ev){
-  var f = ev.target.files[0]; if(!f) return;
-  var r = new FileReader();
-  r.onload = function(e){
+  var f=ev.target.files[0]; if(!f)return;
+  var r=new FileReader();
+  r.onload=function(e){
     try{
-      var imp = JSON.parse(e.target.result);
-      if(!Array.isArray(imp)){ toast('Invalid format'); return; }
-      var added = 0;
+      var imp=JSON.parse(e.target.result);
+      if(!Array.isArray(imp)){toast('Invalid format');return;}
+      var added=0; var full=getFullDB();
       imp.forEach(function(item){
-        var fullDB = getFullDB();
-        if(!fullDB.find(function(d){return d.id === item.id})){
+        if(!full.find(function(d){return d.id===item.id||d.name===item.name})){
           userDB.push(item); added++;
         }
       });
-      saveUserDB(); renderDbList();
-      toast('Imported ' + added + ' new items ✓');
-    } catch(e){ toast('Invalid JSON file'); }
+      saveUserDB(); renderDbList(); toast('Imported '+added+' items \u2713');
+    }catch(e){toast('Invalid JSON file');}
   };
   r.readAsText(f);
 }
-
-// ═══ HOME ═══════════════════════════════════════════════════════
-
 function deleteSurvey(id){
   var s = surveys.find(function(x){return x.id===id});
   if(!s) return;
@@ -707,7 +1507,11 @@ function goBack(){
 function renderSec(){
   updProg();
   var sec=getSections()[curSec];if(!sec)return;
-  document.getElementById('econt').innerHTML=sec.type==='fixed'?fixedSec(sec.id):dynSec(sec);
+  var html;
+  if(sec.type==='dyn'){ html=dynSec(sec); }
+  else if(sec.id && sec.id.substring(0,2)==='ck'){ html=renderChecklist(sec.id); }
+  else { html=fixedSec(sec.id); }
+  document.getElementById('econt').innerHTML=html;
   window.scrollTo(0,0);
 }
 
@@ -727,12 +1531,26 @@ function cfld(id){
 
 function ccard(px,title,extras,ctype){
   var rows='',t=ctype||'full';
-  if(t==='full'||t==='light'){
+  if(t==='full'){
     rows+=fld(px+'_br','Brand / Manufacturer','text','');
     rows+=fld(px+'_mo','Model','text','');
-    if(t==='full'){rows+=fld(px+'_sn','Serial No.','text','');rows+=fld(px+'_yr','Year / Installed','text','');rows+=fld(px+'_hr','Running Hours','text','');}
-    else{rows+=fld(px+'_yr','Year / Installed','text','');}
+    rows+=fld(px+'_sn','Serial No.','text','');
+    rows+=fld(px+'_yr','Year / Installed','text','');
+    rows+=fld(px+'_hr','Running Hours','text','');
+  } else if(t==='twin'){
+    // Twin-engine: Port + Stbd serials and hours
+    rows+=fld(px+'_br','Brand / Manufacturer','text','');
+    rows+=fld(px+'_mo','Model','text','');
+    rows+=fld(px+'_snp','Serial No. Port','text','');
+    rows+=fld(px+'_sns','Serial No. Stbd','text','');
+    rows+=fld(px+'_hrp','Hours Port','text','');
+    rows+=fld(px+'_hrs','Hours Stbd','text','');
+  } else if(t==='light'){
+    rows+=fld(px+'_br','Brand / Manufacturer','text','');
+    rows+=fld(px+'_mo','Model','text','');
+    rows+=fld(px+'_yr','Year / Installed','text','');
   }
+  // surface: no base fields, only extras + condition
   if(extras)extras.forEach(function(ex){rows+=fld(px+'_'+ex[0],ex[1],'text',ex[2]||'')});
   return '<div class="cc"><div class="cct">'+title+'</div>'+rows+cfld(px+'_co')+'</div>';
 }
@@ -780,7 +1598,8 @@ function dynSec(sec){
       ['bath','Bathroom Accessories'],['ac','Air Conditioning'],
       ['safety','Safety Equipment']]);
   } else {
-    var ct=item.cat==='full'?'full':item.cat==='surface'?'surface':'light';
+    var twinIds=['mtu16v','mtu12v','mtu8v','man2842','man2868','cat-c18','cat-c32','volvo-ips','scania'];
+    var ct=twinIds.indexOf(item.id)>=0?'twin':item.cat==='full'?'full':item.cat==='surface'?'surface':'light';
     var extras=item.fields.map(function(f,i){return['x'+i,f,'']});
     html+=ccard(px,item.name,extras,ct);
   }
@@ -789,6 +1608,78 @@ function dynSec(sec){
 }
 
 // ── Fixed sections ─────────────────────────────────────────────
+
+// ─── CHECKLIST SECTION RENDERER ──────────────────────────────────────────
+function renderChecklist(sid){
+  var ckKey={'ck1':'s13_fire','ck2':'s13_hotel','ck3':'s13_sea','ck4':'s7_sub','ck5':'s7_above'}[sid];
+  var ck = CHKLISTS[ckKey];
+  if(!ck) return '<div class="sc"><div class="sh">Checklist</div><div class="sb"><p>Not found.</p></div></div>';
+
+  var html='';
+  ck.sections.forEach(function(sec){
+    html+='<div class="sc"><div class="sh2">'+esc(sec.name)+'</div><div class="sb">';
+    html+='<table class="ct"><thead><tr>';
+    html+='<th style="width:28px"></th>';
+    html+='<th>Check item</th>';
+    html+='<th style="width:96px">Result</th>';
+    html+='<th style="width:36px">Note</th>';
+    html+='</tr></thead><tbody>';
+    sec.items.forEach(function(item,i){
+      var fkey = sid+'_'+ckKey+'_'+i+'_'+item.substring(0,20).replace(/[^a-z0-9]/gi,'_').toLowerCase();
+      var checked = current.data[fkey+'_flag']==='1';
+      var status  = current.data[fkey+'_st']||'';
+      var note    = esc(current.data[fkey+'_n']||'');
+      var sopts   = ['','OK','NOT OK','N/A','NOT TESTED'].map(function(o){
+        return '<option '+(o===status?'selected':'')+'>'+o+'</option>';
+      }).join('');
+      html+='<tr style="'+(checked?'background:#EAF3DE':'')+'">';
+      // Flag checkbox
+      html+='<td style="text-align:center">';
+      html+='<input type="checkbox" '+(checked?'checked':'')+' data-f="'+fkey+'_flag" data-fv="1"';
+      html+=' onchange="af_flag(this)" style="width:17px;height:17px;accent-color:var(--gn);cursor:pointer">';
+      html+='</td>';
+      // Item text
+      html+='<td style="font-size:12px;line-height:1.4">'+esc(item)+'</td>';
+      // Status
+      html+='<td><select data-f="'+fkey+'_st" onchange="af(this)" style="font-size:11px;width:100%;border:none;background:transparent">'+sopts+'</select></td>';
+      // Note toggle
+      html+='<td style="text-align:center">';
+      html+='<button onclick="toggleCkNote(this)" style="background:none;border:1px solid var(--br);border-radius:5px;padding:2px 5px;font-size:12px;cursor:pointer" title="Add note">+</button>';
+      html+='</td>';
+      html+='</tr>';
+      // Note row (hidden until toggled)
+      html+='<tr class="ck-note-row" style="display:'+(note?'table-row':'none')+'">';
+      html+='<td colspan="4" style="padding:2px 6px 6px">';
+      html+='<input type="text" data-f="'+fkey+'_n" value="'+note+'" placeholder="Note…" style="font-size:12px" oninput="af(this)">';
+      html+='</td></tr>';
+    });
+    html+='</tbody></table></div></div>';
+  });
+  return html;
+}
+
+function af_flag(cb){
+  if(!current) return;
+  current.data[cb.dataset.f] = cb.checked ? '1' : '0';
+  // Toggle row highlight
+  var tr = cb.closest('tr');
+  if(tr) tr.style.background = cb.checked ? '#EAF3DE' : '';
+}
+
+function toggleCkNote(btn){
+  var tr = btn.closest('tr');
+  var noteRow = tr ? tr.nextElementSibling : null;
+  if(noteRow && noteRow.classList.contains('ck-note-row')){
+    var hidden = noteRow.style.display === 'none';
+    noteRow.style.display = hidden ? 'table-row' : 'none';
+    btn.textContent = hidden ? '\u2212' : '+';
+    if(hidden){
+      var inp = noteRow.querySelector('input');
+      if(inp) inp.focus();
+    }
+  }
+}
+
 function fixedSec(sid){
   if(sid==='s1')return'<div class="sc"><div class="sh">1  General</div><div class="sb">'+
     fld('g_vn','Vessel Name','text','M/Y ...')+fld('g_bld','Builder')+fld('g_mod','Model')+
@@ -845,8 +1736,8 @@ function fixedSec(sid){
 
   if(sid==='s11')return'<div class="sc"><div class="sh">11  Propulsion System</div><div class="sb">'+
     sfld('e_tp','Engine Type',['','4-stroke Diesel','2-stroke Diesel','Petrol','Electric','Hybrid'])+'</div></div>'+
-    ccard('eng','Main Engines',[['tp','Engine Type',''],['snp','S/N Port',''],['sns','S/N Stbd',''],['hp','Hrs Port',''],['hs','Hrs Stbd',''],['ls','Last Service',''],['nx','Next Service','']],'full')+nbox('eng')+
-    ccard('gbx','Gearboxes',[['rt','Ratio',''],['snp','S/N Port',''],['sns','S/N Stbd','']],'light')+nbox('gbx')+
+    ccard('eng','Main Engines',[['tp','Engine Type',''],['ls','Last Service',''],['nx','Next Service Due','']],'twin')+nbox('eng')+
+    ccard('gbx','Gearboxes',[['rt','Ratio',' e.g. 4:1']],'light')+nbox('gbx')+
     ccard('ect','Engine Controls',[['tp','Type','']],'light')+nbox('ect')+
     ccard('emt','Engine Mounts',[['tp','Type',''],['rn','Last Renewal','']],'light')+nbox('emt')+
     ccard('exh','Exhaust',[['tp','Type','Wet / Dry']],'light')+nbox('exh')+
@@ -993,6 +1884,34 @@ function exportHTML(){
   if(d.cc_op)out+='<p><b>Overall opinion:</b> '+d.cc_op+'</p>';
   out+=phs(['cc_fn_1','cc_fn_2'])+'</div>';
 
+  // Flagged checklist items
+  var ckMap={'ck1':'s13_fire','ck2':'s13_hotel','ck3':'s13_sea','ck4':'s7_sub','ck5':'s7_above'};
+  var ckLabels={'ck1':'Fire & Safety','ck2':'Hotel & Systems','ck3':'Sea Trial','ck4':'Pre-launch (Submerged)','ck5':'Pre-launch (Above Water)'};
+  var hasCk=false;
+  Object.keys(ckMap).forEach(function(sid){
+    var ckKey=ckMap[sid];
+    var ck=CHKLISTS[ckKey]; if(!ck)return;
+    var flagged=[];
+    ck.sections.forEach(function(sec){
+      sec.items.forEach(function(item,i){
+        var fkey=sid+'_'+ckKey+'_'+i+'_'+item.substring(0,20).replace(/[^a-z0-9]/gi,'_').toLowerCase();
+        if(d[fkey+'_flag']==='1'){
+          flagged.push({sec:sec.name,item:item,st:d[fkey+'_st']||'',note:d[fkey+'_n']||''});
+        }
+      });
+    });
+    if(!flagged.length)return;
+    if(!hasCk){out+='<h2>Flagged Checklist Items</h2>';hasCk=true;}
+    out+='<h3 style="color:#2E5FA3;margin:16px 0 8px">'+ckLabels[sid]+'</h3>';
+    out+='<div class="sec"><table>';
+    out+='<tr style="background:#1F3864"><th style="color:#fff;padding:6px 8px;text-align:left">Section</th><th style="color:#fff;padding:6px 8px;text-align:left">Check Item</th><th style="color:#fff;padding:6px 8px;text-align:left">Result</th><th style="color:#fff;padding:6px 8px;text-align:left">Note</th></tr>';
+    flagged.forEach(function(f){
+      var cl=f.st==='NOT OK'?'background:#FCEBEB':f.st==='OK'?'background:#E1F5EE':'';
+      out+='<tr style="'+cl+'"><td style="padding:5px 8px;font-size:12px;color:#555;border-bottom:1px solid #eee">'+esc(f.sec)+'</td><td style="padding:5px 8px;font-size:12px;border-bottom:1px solid #eee">'+esc(f.item)+'</td><td style="padding:5px 8px;font-size:12px;border-bottom:1px solid #eee">'+esc(f.st)+'</td><td style="padding:5px 8px;font-size:12px;border-bottom:1px solid #eee">'+esc(f.note)+'</td></tr>';
+    });
+    out+='</table></div>';
+  });
+
   out+='<p style="margin-top:28px;border-top:1px solid #ccc;padding-top:10px;font-size:12px;color:#555">';
   out+='PREPARED WITHOUT PREJUDICE &mdash; '+esc(d.cc_sn||current.surveyor||'')+' &mdash; '+(d.cc_sq||'')+' &mdash; '+(d.cc_dt||current.date);
   out+='<\/p><\/body><\/html>';
@@ -1007,6 +1926,10 @@ function shareRep(){
 
 // ═══ INIT ═══════════════════════════════════════════════════════
 showHome();
+
+
+
+
 </script>
 <script>
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}
